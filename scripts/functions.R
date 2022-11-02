@@ -36,6 +36,33 @@ acat <- function(x, n, output){
 ## Usage
 ### as.data.frame(apply(pvalue.dataframe,1,acat, n = <number of pvalues in the columns>))
 
+
+## Making GRanges for GWAS results
+grangeGWAS <- function(query.snp.gwas, n){
+  for(i in sprintf("%02d", 1:10)){
+    d = get(paste0("query.snp.gwas", i))
+    #d <-  as_tibble(d)
+    names(d) <- c("Marker","chr","Start_Position","Zvalue","pvalue","End_Position")
+    d <- d %>% mutate_at(c('chr','Start_Position','Zvalue','pvalue','End_Position'),as.integer)
+    assign(paste0("query.gwas", i), d)
+    assign(paste0("gr.q", i) , GRanges(seqnames = paste0("chr",i), ranges = IRanges(start = get(paste0("query.gwas",i))[,"Start_Position"], width = 1, zstat = get(paste0("query.gwas",i))[,"Zvalue"], Marker = get(paste0("query.gwas",i))[,"Marker"],pvalue = get(paste0("query.gwas",i))[,"pvalue"])))
+    assign(paste0("common",i), as.data.frame(findOverlapPairs(get(paste0("gr.db",i)), get(paste0("gr.q",i)))))
+    write.csv(get(paste0("common",i)), paste0("common",i,".csv"), row.names = FALSE)
+    assign(paste0("common",i), vroom(paste0("common",i,".csv")))
+    system(paste0("rm common",i,".csv"))
+    assign(i,d)
+  }
+}
+
+## Usage
+## query.snp.gwas = raw gwas file
+## n = number of gwas files for each chromosome
+### grangeGWAS(query.snp.gwas,10)
+### outputs the overlaps between GWAS snps and db
+
+
+
+
 ## Pvalues Combinations Test
 pvalue.combine <- function(gwas.zstat, gwas.marker, gwas.pvalue, geno, tab.pc,combined.test.statistics){
   x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
