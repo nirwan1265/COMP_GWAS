@@ -1,25 +1,6 @@
 #Global Functions:
-## Database Annotation
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize.annotation")
-db <- as.data.frame(read.table(file ="Zm-B73-REFERENCE-NAM-5.0_Zm00001eb.1.gff3", sep = "\t", header = FALSE))
-dbannot <- function(n,db,output){
-  colnames(db) <- c("Chromosome","Database","Region","Start","End","NA","Strand","NA2","Gene")
-  if(db[1,1] == "chr1"){
-    for(i in 1:n){
-      assign(paste0("db.chr.",i), db[which(db$Chromosome == paste0("chr",i)), ])
-    }
-  }
-  if(db[1,1] == "Chr1"){
-    for(i in 1:n){
-      assign(paste0("db.chr.",i), db[which(db$Chromosome == paste0("Chr",i)), ])
-    }
-  }
-  
-  return(as.data.frame(db.chr.1))
-}
 
-
-##Gene Name filtering
+## Gene Name filtering
 split.names <- function(x,split){
   split.genename <- unlist(strsplit(x, split = ';', fixed = TRUE))[1]
   split.genename2 <- unlist(strsplit(split.genename, split = ":", fixed = TRUE))[2]
@@ -55,7 +36,7 @@ acat <- function(x, n, output){
 ## Usage
 ### as.data.frame(apply(pvalue.dataframe,1,acat, n = <number of pvalues in the columns>))
 
-##Pvalues Combinations Test
+## Pvalues Combinations Test
 pvalue.combine <- function(gwas.zstat, gwas.marker, gwas.pvalue, geno, tab.pc,combined.test.statistics){
   x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
   y <- vector()
@@ -157,24 +138,4 @@ pvalue.combine <- function(gwas.zstat, gwas.marker, gwas.pvalue, geno, tab.pc,co
   #colnames(combined.test.statistics) <- c("GBJ","GHC","minP","SKAT","OMNI(1-4)","CCT(1-4)")
   colnames(combined.test.statistics) <- c("GBJ","GHC","minP","SKAT","OMNI(1-4)")
   return(combined.test.statistics)
-}
-
-
-
-# Mapping Longitude and Latitude to Country Names
-coords2country = function(points)
-{  
-  #countriesSP <- getMap(resolution='low')
-  countriesSP <- getMap(resolution='high') #you could use high res map from rworldxtra if you were concerned about detail
-  # convert our list of points to a SpatialPoints object
-  # pointsSP = SpatialPoints(points, proj4string=CRS(" +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"))
-  #setting CRS directly to that from rworldmap
-  pointsSP = SpatialPoints(points, proj4string=CRS(proj4string(countriesSP)))  
-  # use 'over' to get indices of the Polygons object containing each point 
-  indices = over(pointsSP, countriesSP)
-  # return the ADMIN names of each country
-  indices$ADMIN  
-  #indices$ISO3 # returns the ISO3 code 
-  #indices$continent   # returns the continent (6 continent model)
-  #indices$REGION   # returns the continent (7 continent model)
 }
