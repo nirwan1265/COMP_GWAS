@@ -37,20 +37,52 @@ acat <- function(x, n, output){
 ### as.data.frame(apply(pvalue.dataframe,1,acat, n = <number of pvalues in the columns>))
 
 
-## Making GRanges for GWAS results
-grangeGWAS <- function(query.snp.gwas, n){
-  for(i in sprintf("%02d", 1:10)){
+## Pre GWAS analysis
+preGWAS_process <- function(query.snp.gwas, n, organism){
+  for(i in sprintf("%02d", 1:n)){
     d = get(paste0("query.snp.gwas", i))
-    #d <-  as_tibble(d)
-    names(d) <- c("Marker","chr","Start_Position","Zvalue","pvalue","End_Position")
-    d <- d %>% mutate_at(c('chr','Start_Position','Zvalue','pvalue','End_Position'),as.integer)
+    d = d[-1,]
+    names(d) <- c("Marker","chr","Start_Position","Zvalue","pvalue")
+    d <- d %>% mutate_at(c('chr','Start_Position','Zvalue','pvalue'),as.numeric)
     assign(paste0("query.gwas", i), d)
     assign(paste0("gr.q", i) , GRanges(seqnames = paste0("chr",i), ranges = IRanges(start = get(paste0("query.gwas",i))[,"Start_Position"], width = 1, zstat = get(paste0("query.gwas",i))[,"Zvalue"], Marker = get(paste0("query.gwas",i))[,"Marker"],pvalue = get(paste0("query.gwas",i))[,"pvalue"])))
     assign(paste0("common",i), as.data.frame(findOverlapPairs(get(paste0("gr.db",i)), get(paste0("gr.q",i)))))
-    write.csv(get(paste0("common",i)), paste0("common",i,".csv"), row.names = FALSE)
-    assign(paste0("common",i), vroom(paste0("common",i,".csv")))
-    system(paste0("rm common",i,".csv"))
     assign(i,d)
+    e = get(paste0("common",i))
+    e <- e[which(e$first.X.Region == "gene"), ]
+    e = e[,c(7,15,16,17)]
+    colnames(e) = c("Gene","zstat","Marker","pvalue")
+    e$zstat = unlist(apply(e,1,zval))
+    assign(paste0("filter_common", i), e)
+    assign(paste0("zstat",i), dcast(setDT(e), Gene~rowid(Gene, prefix = "zstat"), value.var = "zstat"))
+    assign(paste0("Marker",i), dcast(setDT(e), Gene~rowid(Gene, prefix = "Marker"), value.var = "Marker"))
+    assign(paste0("pvalue",i), dcast(setDT(e), Gene~rowid(Gene, prefix = "pvalue"), value.var = "pvalue"))
+    assign(paste0("genename",i),apply(get(paste0("Marker",i)),1,split.names))
+    assign(i,e)
+    #print(genename01)
+    f <- get(paste0("zstat",i))
+    f[,1]<- get(paste0("genename",i))
+    f <- as.data.frame(t(f)) 
+    colnames(f) <- f[1,]
+    f <- f[-1,]
+    f <- f %>% mutate_if(is.character,as.numeric, na.rm = T)
+    assign(paste0("zstat",i),f)
+    assign(i,f)
+    g <- get(paste0("Marker",i))
+    g[,1]<- get(paste0("genename",i))
+    g <- as.data.frame(t(g)) 
+    colnames(g) <- g[1,]
+    g <- g[-1,]
+    assign(paste0("Marker",i),g)
+    assign(i,g)
+    h <- get(paste0("pvalue",i))
+    h[,1]<- get(paste0("genename",i))
+    h <- as.data.frame(t(h)) 
+    colnames(h) <- h[1,]
+    h <- h[-1,]
+    h <- h %>% mutate_if(is.character,as.numeric, na.rm = T)
+    assign(paste0("pvalue",i),h)
+    assign(i,h)
   }
 }
 
