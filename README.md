@@ -4,7 +4,9 @@ Easy combination of SNP pvalues from GWAS data using the R GBJ package.
 
 ## Requirements
 1. GWAS text file with the following information
+
 Chromosome 1
+
 |Markers|Chrom|Position|Pvalue|
 |----|----|----|----|
 |M1|1|1|0.05|
@@ -12,6 +14,7 @@ Chromosome 1
 |M3|1|25|0.01|
 
 Chromosome 2
+
 |Markers|Chrom|Position|Pvalue|
 |----|----|----|----|
 |M1|2|1|0.05|
