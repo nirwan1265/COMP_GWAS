@@ -3,7 +3,7 @@ Easy combination of SNP pvalues from GWAS data using the R GBJ package.
 
 
 ## Requirements
-1.) GWAS text file with the following information
+1. GWAS text file with the following information
 Chromosome 1
 |Markers|Chrom|Position|Pvalue|
 |----|----|----|----|
@@ -22,12 +22,15 @@ The files should be separated based on their chromosome. The chromosome should b
 
 The script to separate chromosome can be found here : 
 
-2.) Genotype file
-Should be noted in the normal MAF type. Again, faster if it is divided according to the chromosomes.
-M1---M2---M3---M4
-0---1---2----9
+2. Genotype file
+A genotype text file with MAF numbering with markers in the column and subsequent values in the rows. Each row should represent an accesssion/individual.
 
-3.) PCA file
+|M1|M2|M3|M4|
+|----|---|---|---|
+|0|1|2|-9|
+|0|2|0|1|
+
+3. PCA file
 THe PCA file that you used to run the model. 10 PCAs are preferred. 
 
 
