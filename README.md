@@ -1,5 +1,5 @@
-# GWAS-GBJ
-Easy combination of SNP pvalues from GWAS data using the R GBJ package.
+# COMP-GWAS (Combination of pvalues for GWAS)
+Easy workflow for combination of SNP pvalues for gene set from GWAS data. The SNP Z scores are to used to calculate the combinatorial pvalues. 
 
 
 ## Requirements
