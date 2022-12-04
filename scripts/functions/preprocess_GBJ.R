@@ -1,6 +1,8 @@
 #Pre processing step before running GBJ
-
 preprocess <- function(path, filename, n, organism){
+  for(i in sprintf("%02d",1:10)){
+    assign(paste0("gr.db",i), readRDS(paste0("~/data/gr.db",i,".RDS")))
+  }
   a <- 1
   if(organism == "Sorghum bicolor"){
     file_list <- list.files(path = path, pattern = filename)
@@ -58,9 +60,10 @@ preprocess <- function(path, filename, n, organism){
 
 # Usage
 # Not run
-# setwd("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Research/Results/All.phosphorus_LM")
-# path <- getwd()
-# filename <- "tot"
-# organism <- "Sorghum bicolor"
-# preprocess(path, filename, 10,  organism)
+setwd("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Research/Results/All.phosphorus_LM")
+path <- getwd()
+system("ls")
+filename <- "tot"
+organism <- "Sorghum bicolor"
+preprocess(path, filename, 10,  organism)
 
