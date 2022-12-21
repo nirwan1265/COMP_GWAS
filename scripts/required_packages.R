@@ -15,6 +15,6 @@ packages <- c("tidyverse","ggplot2", "Rsamtools","GenomicAlignments","rtracklaye
 
 
 # Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
+suppressMessages(invisible(lapply(packages, library, character.only = TRUE)))
 
 
