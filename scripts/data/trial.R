@@ -1,15 +1,20 @@
 preprocess <- function(path, filename, n, organism){
+  # Set working directory
   setwd(path)
-  a <- 1
-  for(i in sprintf("%02d",1:10)){
-    assign(paste0("gr.db",a), readRDS(paste0("GenomicRanges/sorghum/gr.db",i,".RDS")))
-    a = a + 1
-  }
-  a <- 1
+  #a <- 1
   file_path = paste0(path,"/GWAS/sorghum/")
   if(organism == "Sorghum bicolor"){
+    # Load Sorghum Genomic Ranges
+    a <- 1
+    for(i in sprintf("%02d",1:10)){
+      assign(paste0("gr.db",a), readRDS(paste0("GenomicRanges/sorghum/gr.db",i,".RDS")))
+      a = a + 1
+    }
+    
+    # Data processing before GBJ
+    a <- 1
     file_list <- list.files(path = file_path, pattern = filename)
-     for(i in 1:length(file_list)){
+    for(i in 1:length(file_list)){
        assign(file_list[i], vroom(paste0(file_path,file_list[i])))
        d = as.data.frame(get(file_list[i]))
        d$zstat = unlist(apply(d,1,zval))
@@ -50,16 +55,21 @@ preprocess <- function(path, filename, n, organism){
        assign(paste0("pvalue",i),h)
     }
   }
-  print(pvalue5[1:4,1:4])
-  print(Marker5[1:4,1:4])
-  print(zstat5[1:4,1:4])
+  # Load PCA values
+  
 }
 
 #system("ls data/GenomicRanges/sorghum")
 path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/scripts/data"
 filename <- "tot"
+pca <- "pca"
 organism <- "Sorghum bicolor"
 chr <- 1
 x <- preprocess(path, filename, chr,  organism)
 
 
+#Running the Analysis:
+#Using the pvalue.combination function:
+for(i in sprintf("%02d", 1:10)){
+  assign(paste0("pvalue.combine",i), pvalue.combine(get(paste0("gwas",i,".zstat")), get(paste0("gwas",i,".Marker")), get(paste0("gwas",i,".pvalue")), get(paste0("geno",i)), get(paste0("tab",i))))
+}
