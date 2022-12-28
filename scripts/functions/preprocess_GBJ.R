@@ -1,7 +1,7 @@
 #Pre processing step before running GBJ
 preprocess <- function(path, filename, n, organism){
   for(i in sprintf("%02d",1:10)){
-    assign(paste0("gr.db",i), readRDS(paste0("gr.db",i,".RDS")))
+    assign(paste0("gr.db",i), readRDS(paste0("data/gr.db",i,".RDS")))
   }
   a <- 1
   if(organism == "Sorghum bicolor"){
@@ -62,7 +62,7 @@ preprocess <- function(path, filename, n, organism){
 # Not run
 getwd()
 path <- getwd()
-
+system("ls data/GenomicRanges/sorghum")
 filename <- "tot"
 organism <- "Sorghum bicolor"
 preprocess(path, filename, 10,  organism)
