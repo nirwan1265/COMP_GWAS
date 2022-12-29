@@ -53,6 +53,7 @@ preprocess <- function(path, filename, n, organism){
        h <- h[-1,]
        h <- h %>% mutate_if(is.character,as.numeric, na.rm = T)
        assign(paste0("pvalue",i),h)
+       #return(get(paste0("pvalue",i)))
     }
   }
   # Load PCA values
@@ -60,7 +61,7 @@ preprocess <- function(path, filename, n, organism){
 }
 
 #system("ls data/GenomicRanges/sorghum")
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/scripts/data"
+path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 filename <- "tot"
 pca <- "pca"
 organism <- "Sorghum bicolor"
