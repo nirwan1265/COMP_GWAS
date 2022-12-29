@@ -56,8 +56,6 @@ preprocess <- function(path, filename, n, organism){
        #return(get(paste0("pvalue",i)))
     }
   }
-  # Load PCA values
-  
 }
 
 #system("ls data/GenomicRanges/sorghum")
