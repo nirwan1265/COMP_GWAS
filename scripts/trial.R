@@ -71,7 +71,6 @@ organism <- "Sorghum bicolor"
 chr <- 1
 preprocess(path, filename, chr,  organism)
 
-x[1:5,1:5]
 
 #Running the Analysis:
 #Using the pvalue.combination function:
