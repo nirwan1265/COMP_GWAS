@@ -67,7 +67,6 @@ filename <- "tot"
 organism <- "Sorghum bicolor"
 preprocess(path, filename, 10,  organism)
 
-
 for(i in sprintf("%02d",1:10)){
   assign(paste0("gr.db",i), readRDS(get(paste0(getwd(),"/data/GenomicRanges/sorghum/gr.db",i,".RDS"))))
 }
