@@ -39,33 +39,39 @@ preprocess <- function(path, filename, n, organism){
        colnames(f) <- f[1,]
        f <- f[-1,]
        f <- f %>% mutate_if(is.character,as.numeric, na.rm = T)
+       f <- f[mixedsort(row.names(f)), ]
        assign(paste0("zstat",i),f)
        g <- get(paste0("Marker",i))
        g[,1]<- get(paste0("genename",i))
        g <- as.data.frame(t(g))
        colnames(g) <- g[1,]
        g <- g[-1,]
+       g <- g[mixedsort(row.names(g)), ]
        assign(paste0("Marker",i),g)
+       return (get(paste0("Marker",i)))
        h <- get(paste0("pvalue",i))
        h[,1]<- get(paste0("genename",i))
        h <- as.data.frame(t(h))
        colnames(h) <- h[1,]
        h <- h[-1,]
        h <- h %>% mutate_if(is.character,as.numeric, na.rm = T)
+       h <- h[mixedsort(row.names(h)), ]
        assign(paste0("pvalue",i),h)
+       #print(get(paste0("pvalue",i)))
        #return(get(paste0("pvalue",i)))
     }
   }
 }
 
 #system("ls data/GenomicRanges/sorghum")
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 filename <- "tot"
 pca <- "pca"
 organism <- "Sorghum bicolor"
 chr <- 1
-x <- preprocess(path, filename, chr,  organism)
+preprocess(path, filename, chr,  organism)
 
+x[1:5,1:5]
 
 #Running the Analysis:
 #Using the pvalue.combination function:
