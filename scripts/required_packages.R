@@ -1,5 +1,5 @@
 # Package names
-packages <- c("tidyverse","ggplot2", "Rsamtools","GenomicAlignments","rtracklayer","GenomicRanges","AnnotationHub","knitr","gtools","data.table","stringi","GBJ","metap","multtest","Hmisc","devtools","SNPRelate","gdsfmt","dplyr","vcfR","tidyr","AssocTests","SKAT","NCmisc","ACAT","PANTHER.db","UniProt.ws","ape","raster","sp","rgdal","rworldmap","janitor","countrycode","tibble","vroom")
+packages <- c("tidyverse","ggplot2", "Rsamtools","GenomicAlignments","rtracklayer","GenomicRanges","AnnotationHub","knitr","gtools","data.table","stringi","GBJ","metap","multtest","Hmisc","devtools","SNPRelate","gdsfmt","dplyr","vcfR","tidyr","AssocTests","SKAT","NCmisc","ACAT","PANTHER.db","UniProt.ws","ape","raster","sp","rgdal","rworldmap","janitor","countrycode","tibble","vroom","gtools")
 
 # Install packages not yet installed
 # installed_packages <- packages %in% rownames(installed.packages())
@@ -16,5 +16,3 @@ packages <- c("tidyverse","ggplot2", "Rsamtools","GenomicAlignments","rtracklaye
 
 # Packages loading
 suppressMessages(invisible(lapply(packages, library, character.only = TRUE)))
-
-
