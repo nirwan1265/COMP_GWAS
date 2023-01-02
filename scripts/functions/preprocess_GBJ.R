@@ -1,5 +1,8 @@
 #Pre processing step before running GBJ
 preprocess <- function(path, filename, n, organism){
+  zstat_list <- list()
+  pvalue_list <- list()
+  marker_list <- list()
   # Set working directory
   setwd(path)
   #a <- 1
@@ -15,7 +18,7 @@ preprocess <- function(path, filename, n, organism){
     # Data processing before GBJ
     a <- 1
     file_list <- list.files(path = file_path, pattern = filename)
-    for(i in 1:length(file_list)){
+    for(i in 1:chr){#length(file_list)){
       assign(file_list[i], vroom(paste0(file_path,file_list[i])))
       d = as.data.frame(get(file_list[i]))
       d$zstat = unlist(apply(d,1,zval))
@@ -58,24 +61,39 @@ preprocess <- function(path, filename, n, organism){
       h <- h %>% mutate_if(is.character,as.numeric, na.rm = T)
       h <- h[mixedsort(row.names(h)), ]
       assign(paste0("pvalue",i),h)
-      #print(get(paste0("pvalue",i)))
-      #return(get(paste0("pvalue",i)))
     }
   }
   else if(organism == "Zea mays"){
     print("hello")
   }
+  zstat_list = list()
+  for (i in 1:chr){
+    zstat_list <- c(zstat_list, list(get(paste0("zstat",i))))
+    names(zstat_list)[i] <- paste0("zstat",i)
+  }
+  for (i in 1:chr){
+    pvalue_list <- c(pvalue_list, list(get(paste0("pvalue",i))))
+    names(pvalue_list)[i] <- paste0("pvalue",i)
+  }
+  for (i in 1:chr){
+    marker_list <- c(marker_list, list(get(paste0("Marker",i))))
+    names(marker_list)[i] <- paste0("markers",i)
+  }
+  return (list(Zstat = zstat_list, pvalue = pvalue_list,Marker = marker_list))
 }
 
 
 # Usage
 # Not run
 path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+setwd(path)
 filename <- "tot"
 pca <- "pca"
 organism <- "Sorghum bicolor"
-chr <- 1
-preprocess(path, filename, chr,  organism)
+chr <- 10
+prerocess <- preprocess(path, filename, chr,  organism)
+
+
 
 for(i in sprintf("%02d",1:10)){
   assign(paste0("gr.db",i), readRDS(get(paste0(getwd(),"/data/GenomicRanges/sorghum/gr.db",i,".RDS"))))
