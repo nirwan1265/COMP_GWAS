@@ -91,8 +91,9 @@ filename <- "tot"
 pca <- "pca"
 organism <- "Sorghum bicolor"
 chr <- 10
-prerocess <- preprocess(path, filename, chr,  organism)
+preprocess_data <- preprocess(path, filename, chr,  organism)
 
+preprocess$Zstat$zstat1
 
 
 for(i in sprintf("%02d",1:10)){
