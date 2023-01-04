@@ -1,13 +1,17 @@
 #Pre processing step before running GBJ
 preprocess <- function(path, phenoname, n, organism){
+  #Helper lists 
   zstat_list <- list()
   pvalue_list <- list()
   marker_list <- list()
+  
   # Set working directory
   setwd(path)
-  #a <- 1
   file_path = paste0(path,"/GWAS/sorghum/")
+  
+  # Preprocess for Sorghum
   if(organism == "Sorghum bicolor"){
+    
     # Load Sorghum Genomic Ranges
     a <- 1
     for(i in sprintf("%02d",1:10)){
@@ -86,9 +90,7 @@ preprocess <- function(path, phenoname, n, organism){
 # Usage
 # Not run
 path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-setwd(path)
 filename <- "tot"
-pca <- "pca"
 organism <- "Sorghum bicolor"
 chr <- 10
 preprocess_data <- preprocess(path, filename, chr,  organism)
