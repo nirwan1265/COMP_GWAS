@@ -63,12 +63,22 @@ trial_ref <- function(y,z){
 }
 
 
+pca <- trial$PCA
+trial_gbj <- function(ref_genotype){
+  cor_mat <- estimate_ss_cor(ref_pcs = pca, ref_genotypes = ref_genotype, link_function = 'linear')
+  return(cor_mat)
+}
+
+## NEED TO run ref_genotype individually first 
+## Use that to run run GBJ
+
+
 # Use foreach to apply the function to each column in parallel
 #results <- foreach(i = 1:ncol(as.data.frame(trial$preprocess$Zstat[1])), .combine = c) %dopar% {
 results = list()
 tic()
-results <- foreach(i = 1:100, .combine = c) %dopar% {
-  list(trial_ref(marker_df[,i], genotype_df),trial_add(zstat_df[,i]))
+results <- foreach(i = 1, .combine = c) %dopar% {
+  list(trial_ref(marker_df[,i], genotype_df),ref_genotype = trial_add(zstat_df[,i]), trial_gbj(ref_genotype))
 }
 toc()
 results
