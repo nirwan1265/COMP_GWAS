@@ -118,3 +118,22 @@ split.names <- function(x,split){
   split.genename2 <- unlist(strsplit(split.genename, split = ":", fixed = TRUE))[2]
   return(split.genename2)
 }
+
+list.of.packages <- c(
+  "foreach",
+  "doParallel",
+  "ranger",
+  "palmerpenguins",
+  "tidyverse",
+  "kableExtra"
+)
+
+for(package.i in list.of.packages){
+  suppressPackageStartupMessages(
+    library(
+      package.i, 
+      character.only = TRUE
+    )
+  )
+}
+

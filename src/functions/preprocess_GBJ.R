@@ -1,4 +1,5 @@
 #Pre processing step before running GBJ
+
 preprocess <- function(path, phenoname, n, organism){
   #Helper lists 
   zstat_list <- list()
@@ -89,7 +90,7 @@ preprocess <- function(path, phenoname, n, organism){
 
 # Usage
 # Not run
-path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 filename <- "tot"
 organism <- "Sorghum bicolor"
 chr <- 10
