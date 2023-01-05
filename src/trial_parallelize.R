@@ -12,7 +12,7 @@ pvalue.combine <- function(path, phenoname, chr, organism){
 
 
 
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 phenoname <- "tot"
 organism <- "Sorghum bicolor"
 chr <- 2
@@ -43,8 +43,16 @@ gbj_test <- function(gwas.zstat, gwas.marker, gwas.pvalue, geno, tab.pc){
 }
 
 for(i in chr)
+  
 zstat_df <- as.data.frame(trial$preprocess$Zstat[[1]]) # i
+#zstat_df <- do.call("rbind", lapply(zstat_df, as.data.frame))
+
+zstat_df <- zstat_df[ ,Filter(function(x) length(na.omit(x)) > 1, zstat_df)]
+zstat_df %>% dplyr::filter(!is.na())
+length(na.omit(zstat_df$SORBI_3001G000100))
+
 zstat_df <- zstat_df[1:100,1:100]
+
 pvalue_df <- as.data.frame(trial$preprocess$pvalue[[1]])
 pvalue_df <- pvalue_df[1:100,1:100]
 marker_df <- as.data.frame(trial$preprocess$Marker[[1]])
@@ -64,6 +72,9 @@ trial_ref <- function(y,z){
 
 
 pca <- trial$PCA
+
+
+
 trial_gbj <- function(ref_genotype){
   cor_mat <- estimate_ss_cor(ref_pcs = pca, ref_genotypes = ref_genotype, link_function = 'linear')
   return(cor_mat)
@@ -72,16 +83,30 @@ trial_gbj <- function(ref_genotype){
 ## NEED TO run ref_genotype individually first 
 ## Use that to run run GBJ
 
+# Use foreach to apply the function to each column in parallel
+ref_genotype = list()
+tic()
+ref_genotype <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
+  list(trial_ref(marker_df[,i], genotype_df))
+  #names(ref_genotype)[i] <- paste0("geno",i)
+}
+toc()
+
+
+#Filtering list with less than two SNPs
+ref_genotype <- Filter(function(x) length(x) >=2, ref_genotype)
+
 
 # Use foreach to apply the function to each column in parallel
-#results <- foreach(i = 1:ncol(as.data.frame(trial$preprocess$Zstat[1])), .combine = c) %dopar% {
 results = list()
 tic()
-results <- foreach(i = 1, .combine = c) %dopar% {
-  list(trial_ref(marker_df[,i], genotype_df),ref_genotype = trial_add(zstat_df[,i]), trial_gbj(ref_genotype))
+results <- foreach(i = 1:20, .combine = c) %dopar% {
+  list(trial_ref(marker_df[,i], genotype_df), trial_add(zstat_df[,i]))
 }
 toc()
 results
 
 # Stop the parallel cluster
 stopCluster(cluster)
+
+
