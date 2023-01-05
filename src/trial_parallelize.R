@@ -1,3 +1,4 @@
+library(tictoc)
 #Register nodes
 cluster <- makeCluster(parallel::detectCores() -1)
 registerDoParallel(cluster)
@@ -86,7 +87,7 @@ toc()
 
 
 # PCA 
-pca <- as.data.frame(trial$PCA)
+pca <- as.matrix(trial$PCA)
 
 
 # Use foreach to apply the function to each column in parallel for calculating correlation matrix
@@ -105,52 +106,18 @@ gbj_analysis = list()
 tic()
 gbj_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
   #corr_gbj(ref_genotype[i])
-  list(GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[i]))
+  list(GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]])$GBJ_pvalue)
 }
 toc()
 
-
-GBJ(test_stats = vector(na.omit(zstat_df[1])), cor_mat=as.matrix(corr_mat[1]))
-
-as.vector(unlist(na.omit(zstat_df[1])))
-
-
-trial_add <- function(x){
-  return(x+100)
-}
-
-
-
-
-
-## NEED TO run ref_genotype individually first 
-## Use that to run run GBJ
-
-# Use foreach to apply the function to each column in parallel
-ref_genotype = list()
+# Use foreach to apply the function to each column in parallel for calculating correlation matrix
+omni_analysis = list()
 tic()
-ref_genotype <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
-  list(trial_ref(marker_df[,i], genotype_df))
-  #names(ref_genotype)[i] <- paste0("geno",i)
+omni_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
+  list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
 }
 toc()
 
-
-# Note needed cause already done in previous steps
-#Filtering list with less than two SNPs
-#ref_genotype <- Filter(function(x) length(x) >=2, ref_genotype)
-
-
-# Use foreach to apply the function to each column in parallel
-results = list()
-tic()
-results <- foreach(i = 1:20, .combine = c) %dopar% {
-  list(trial_ref(marker_df[,i], genotype_df), trial_add(zstat_df[,i]))
-}
-toc()
-results
 
 # Stop the parallel cluster
 stopCluster(cluster)
-
-
