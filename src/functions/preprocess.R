@@ -1,6 +1,7 @@
 #Pre processing step before running GBJ
 
 preprocess <- function(path, phenoname, n, organism){
+  
   #Helper lists 
   zstat_list <- list()
   pvalue_list <- list()
@@ -96,7 +97,7 @@ organism <- "Sorghum bicolor"
 chr <- 10
 preprocess_data <- preprocess(path, filename, chr,  organism)
 
-preprocess$Zstat$zstat1
+
 
 
 for(i in sprintf("%02d",1:10)){
