@@ -16,7 +16,7 @@ preprocess <- function(path, phenoname, n, organism){
     
     # Load Sorghum Genomic Ranges
     a <- 1
-    for(i in sprintf("%02d",1:10)){
+    for(i in sprintf("%02d",1:chr)){
       assign(paste0("gr.db",a), readRDS(paste0("GenomicRanges/sorghum/gr.db",i,".RDS")))
       a = a + 1
     }
@@ -94,12 +94,9 @@ preprocess <- function(path, phenoname, n, organism){
 path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 filename <- "tot"
 organism <- "Sorghum bicolor"
-chr <- 10
+chr <- 3
 preprocess_data <- preprocess(path, filename, chr,  organism)
 
 
 
 
-for(i in sprintf("%02d",1:10)){
-  assign(paste0("gr.db",i), readRDS(get(paste0(getwd(),"/data/GenomicRanges/sorghum/gr.db",i,".RDS"))))
-}
