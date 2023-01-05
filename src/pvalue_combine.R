@@ -7,8 +7,10 @@ pvalue.combine <- function(path, phenoname, chr, organism){
 
 
 
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 phenoname <- "tot"
 organism <- "Sorghum bicolor"
 chr <- 2
 trial <- pvalue.combine(path, phenoname, chr, organism)
+
+
