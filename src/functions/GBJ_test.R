@@ -1,104 +1,66 @@
-##Pvalues Combinations Test
-gbj_test <- function(gwas.zstat, gwas.marker, gwas.pvalue, geno, tab.pc,combined.test.statistics){
-  x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
-  y <- vector()
-  z <- vector()
-  combined.test.statistics <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
-  ref_genotype <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
-  ref_genotype_skat <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
+gbj_test <- function(chr){
+  #Empty results list to store values for each chromosome
+  results <- list()
   
-  for (i in 1:ncol(gwas.zstat)){ 
-    for(j in 1:sum(!is.na(gwas.zstat[,i]))){ 
-      x[1,j] <- gwas.zstat[j,i]
-      
-      y[j] <- as.vector(as.character(gwas.marker[j,i]))
-      
-      z[j] <- gwas.pvalue[j,i]
-      z <- as.double(z[!is.na(z)])
+  for(j in 1:chr){
+    
+    # Subset the required data
+    zstat_df <- as.data.frame(trial$preprocess$Zstat[[j]]) # i
+    zstat_df <- zstat_df[1:100,1:100]
+    pvalue_df <- as.data.frame(trial$preprocess$pvalue[[j]])
+    pvalue_df <- pvalue_df[1:100,1:100]
+    marker_df <- as.data.frame(trial$preprocess$Marker[[j]])
+    marker_df <- marker_df[1:100,1:100]
+    genotype_df <- as.data.frame(trial$genotype[[j]])
+    
+    ## Function for Subsetting columns with more than one element 
+    subset_element <- function (x) length(na.omit(x)) > 1
+    
+    # Applying the function for each df
+    subset_zstat <- sapply(zstat_df, subset_element)
+    subset_pvalue <- sapply(pvalue_df, subset_element)
+    subset_marker <- sapply(marker_df, subset_element)
+    
+    # Subsetting the data frame with more than 1 elements
+    zstat_df <- zstat_df[, subset_zstat]
+    pvalue_df <- pvalue_df[, subset_pvalue]
+    marker_df <- marker_df[, subset_marker]
+    
+    # Subsetting reference genotype
+    sub_refgeno <- function(y,z){
+      y <- y[!is.na(y)]
+      ref_genotype <- as.data.frame(z[y])
+      return(ref_genotype)
     }
-    x <- as.matrix(as.double(x))
-    if(nrow(x) > 2000){
-      x <- x[1:2000,]
-      y <- y[1:2000]
-      z <- z[1:2000]
-      
-      #GBJ, minP, GHC, OMNI
-      ref_genotype <- as.data.frame(geno[,colnames(geno) %in% y])
-      # ref_genotype <- data.frame(lapply(ref_genotype, function(x){
-      #   gsub("-",0,x)
-      # }))
-      # ref_genotype <- data.frame(apply(ref_genotype, 2, function(x) as.numeric(as.character(x))))
-      cor_mat <- estimate_ss_cor(ref_pcs=tab.pc, ref_genotypes=ref_genotype, link_function='linear')
-      #calculate once cor_mat and subset
-      gbj.test <- GBJ(test_stats = x, cor_mat=cor_mat)
-      ghc.test <- GHC(test_stats = x, cor_mat=cor_mat)
-      minP.test <- minP(test_stats = x, cor_mat=cor_mat)
-      OMNI.test <- OMNI_ss(test_stats = x, cor_mat=cor_mat, num_boots = 100)
-      combined.test.statistics[i,1] <- gbj.test$GBJ_pvalue
-      combined.test.statistics[i,2] <- ghc.test$GHC_pvalue
-      combined.test.statistics[i,3] <- minP.test$minP_pvalue
-      
-      #SKAT
-      ref_genotype_skat <- as.matrix(ref_genotype)
-      obj01 <- as.list(ref_genotype_skat,pheno)
-      obj01 <- SKAT_Null_Model(pheno ~ 1, out_type="C", data=obj01)
-      combined.test.statistics[i,4] <- SKAT(ref_genotype_skat,obj01)$p.value
-      
-      #OMNI
-      combined.test.statistics[i,5] <- OMNI.test$OMNI_pvalue
-      
-      
-      x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
-      y <- vector()
-      
-    } else if(nrow(x) >= 2 & nrow(x) < 2000){
-      ref_genotype <- as.data.frame(geno[,colnames(geno) %in% y])
-      cor_mat <- estimate_ss_cor(ref_pcs=tab.pc, ref_genotypes=ref_genotype, link_function='linear')
-      
-      #GBJ, minP, GHC, OMNI
-      gbj.test <- GBJ(test_stats = x, cor_mat=cor_mat)
-      minP.test <- minP(test_stats = x, cor_mat=cor_mat)
-      ghc.test <- GHC(test_stats = x, cor_mat=cor_mat)
-      OMNI.test <- OMNI_ss(test_stats = x, cor_mat=cor_mat, num_boots = 100)
-      combined.test.statistics[i,1] <- gbj.test$GBJ_pvalue
-      combined.test.statistics[i,2] <- ghc.test$GHC_pvalue
-      combined.test.statistics[i,3] <- minP.test$minP_pvalue
-      
-      #SKAT
-      ref_genotype_skat <- as.matrix(ref_genotype)
-      obj01 <- as.list(ref_genotype_skat,pheno)
-      obj01 <- SKAT_Null_Model(pheno ~ 1, out_type="C", data=obj01)
-      combined.test.statistics[i,4] <- SKAT(ref_genotype_skat,obj01)$p.value
-      
-      #OMNI
-      combined.test.statistics[i,5] <- OMNI.test$OMNI_pvalue
-      
-      x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
-      y <- vector()
-      ref_genotype <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
-      ref_genotype_skat <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
-      
-    } else if(nrow(x) == 1){
-      combined.test.statistics[i,1] <- as.double(gwas.pvalue[1,i])
-      combined.test.statistics[i,2] <- as.double(gwas.pvalue[1,i])
-      combined.test.statistics[i,3] <- as.double(gwas.pvalue[1,i])
-      combined.test.statistics[i,4] <- as.double(gwas.pvalue[1,i])
-      combined.test.statistics[i,5] <- as.double(gwas.pvalue[1,i])
-      
-      x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
-      y <- vector()
-      ref_genotype <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
-      ref_genotype_skat <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
+    
+    # Use foreach to apply the function to each column in parallel to subset ref_genotype for each column
+    ref_genotype = list()
+    ref_genotype <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
+      list(sub_refgeno(marker_df[,i], genotype_df))
     }
-    #combined.test.statistics[i,6] <- apply(combined.test.statistics[i,1:4],1,acat)
-    x <- as.data.frame(matrix(0, nrow = 1, ncol = 1))
-    y <- vector()
-    z <- vector()
-    ref_genotype <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
-    ref_genotype_SKAT <- as.data.frame(matrix(NA, nrow = 1, ncol = 1))
+    
+    # PCA 
+    pca <- as.data.frame(trial$PCA)
+    
+    # Use foreach to apply the function to each column in parallel for calculating correlation matrix
+    corr_mat = list()
+    corr_mat <- foreach(i = 1:20, .combine = c) %dopar% {
+      list(GBJ::estimate_ss_cor(ref_pcs = pca, ref_genotypes = as.data.frame(ref_genotype[i]), link_function = 'linear'))
+    }
+    
+    # gbj_analysis = list()
+    # gbj_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
+    #   list(GBJ::GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]])$GBJ_pvalue)
+    # }
+    # results[[j]] <- gbj_analysis
+    # names(results)[[j]] <- paste0("chr",j)
+    
+    omni_analysis = list()
+    omni_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
+      list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
+    }
+    results[[j]] <- omni_analysis
+    names(results)[[j]] <- paste0("chr",j)
   }
-  #colnames(combined.test.statistics) <- c("GBJ","GHC","minP","SKAT","OMNI(1-4)","CCT(1-4)")
-  colnames(combined.test.statistics) <- c("GBJ","GHC","minP","SKAT","OMNI(1-4)")
-  return(combined.test.statistics)
+  return(results)
 }
-
