@@ -6,11 +6,11 @@ gbj_test <- function(chr){
     
     # Subset the required data
     zstat_df <- as.data.frame(trial$preprocess$Zstat[[j]]) # i
-    zstat_df <- zstat_df[1:100,1:100]
+    #zstat_df <- zstat_df[1:100,1:100]
     pvalue_df <- as.data.frame(trial$preprocess$pvalue[[j]])
-    pvalue_df <- pvalue_df[1:100,1:100]
+    #pvalue_df <- pvalue_df[1:100,1:100]
     marker_df <- as.data.frame(trial$preprocess$Marker[[j]])
-    marker_df <- marker_df[1:100,1:100]
+    #marker_df <- marker_df[1:100,1:100]
     genotype_df <- as.data.frame(trial$genotype[[j]])
     
     ## Function for Subsetting columns with more than one element 
@@ -64,3 +64,6 @@ gbj_test <- function(chr){
   }
   return(results)
 }
+
+
+testing <- gbj_test(3)

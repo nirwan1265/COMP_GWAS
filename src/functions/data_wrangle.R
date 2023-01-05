@@ -7,9 +7,12 @@ data_wrangle <- function(path, phenoname, chr, organism){
 }
 
 
-
+#Not use
 path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 phenoname <- "tot"
 organism <- "Sorghum bicolor"
 chr <- 2
 trial <- data_wrangle(path, phenoname, chr, organism)
+
+
+
