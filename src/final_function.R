@@ -12,7 +12,7 @@ registerDoParallel(cluster)
 #Final Function
 final_function <- function(path, phenoname, chr, organism) {
   
-  #trial <- data_wrangle(path, phenoname, chr, organism)
+  
   results <- gbj_test(chr)
   
   return(results)
