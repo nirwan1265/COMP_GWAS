@@ -1,6 +1,8 @@
-gbj_test <- function(chr){
+gbj_test <- function(path, phenoname, chr, organism){
   #Empty results list to store values for each chromosome
   results <- list()
+  
+  trial <- data_wrangle(path, phenoname, chr, organism)
   
   for(j in 1:chr){
     
@@ -61,9 +63,31 @@ gbj_test <- function(chr){
     }
     results[[j]] <- omni_analysis
     names(results)[[j]] <- paste0("chr",j)
+
+    for(j in 1:length(zstat_df)){
+     names(results[[i]][[j]]) <- colnames(zstat_df)[j]
+    }
+
   }
   return(results)
 }
 
+names(results[[paste0("chr",2)]][[2]]) <- colnames(zstat_df)[2]
 
-testing <- gbj_test(3)
+#Required arguments
+path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+phenoname <- "tot"
+organism <- "Sorghum bicolor"
+chr <- 2
+
+#Register nodes
+cluster <- makeCluster(parallel::detectCores() -1)
+registerDoParallel(cluster)
+
+#Getting the results with time
+tic()
+final_results <- gbj_test(path, phenoname, chr, organism)
+toc()
+
+# Stop the parallel cluster
+stopCluster(cluster)
