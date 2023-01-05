@@ -43,42 +43,85 @@ gbj_test <- function(gwas.zstat, gwas.marker, gwas.pvalue, geno, tab.pc){
 }
 
 for(i in chr)
-  
+
 zstat_df <- as.data.frame(trial$preprocess$Zstat[[1]]) # i
-#zstat_df <- do.call("rbind", lapply(zstat_df, as.data.frame))
-
-zstat_df <- zstat_df[ ,Filter(function(x) length(na.omit(x)) > 1, zstat_df)]
-zstat_df %>% dplyr::filter(!is.na())
-length(na.omit(zstat_df$SORBI_3001G000100))
-
 zstat_df <- zstat_df[1:100,1:100]
-
 pvalue_df <- as.data.frame(trial$preprocess$pvalue[[1]])
 pvalue_df <- pvalue_df[1:100,1:100]
 marker_df <- as.data.frame(trial$preprocess$Marker[[1]])
 marker_df <- marker_df[1:100,1:100]
 genotype_df <- as.data.frame(trial$genotype[[1]])
 
-trial_add <- function(x){
-  return(x+100)
-}
 
-trial_ref <- function(y,z){
+
+## Function for Subsetting columns with more than one element 
+subset_element <- function (x) length(na.omit(x)) > 1
+
+# Applying the function for each df
+subset_zstat <- sapply(zstat_df, subset_element)
+subset_pvalue <- sapply(pvalue_df, subset_element)
+subset_marker <- sapply(marker_df, subset_element)
+
+# Subsetting the data frame with more than 1 elements
+zstat_df <- zstat_df[, subset_zstat]
+pvalue_df <- pvalue_df[, subset_pvalue]
+marker_df <- marker_df[, subset_marker]
+
+
+# Subsetting reference genotype
+sub_refgeno <- function(y,z){
   y <- y[!is.na(y)]
-  #z <- z[!is.na(z)]
   ref_genotype <- as.data.frame(z[y])
   return(ref_genotype)
 }
 
-
-pca <- trial$PCA
-
-
-
-trial_gbj <- function(ref_genotype){
-  cor_mat <- estimate_ss_cor(ref_pcs = pca, ref_genotypes = ref_genotype, link_function = 'linear')
-  return(cor_mat)
+# Use foreach to apply the function to each column in parallel to subset ref_genotype for each column
+ref_genotype = list()
+tic()
+ref_genotype <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
+  list(sub_refgeno(marker_df[,i], genotype_df))
 }
+toc()
+
+
+
+# PCA 
+pca <- as.data.frame(trial$PCA)
+
+
+# Use foreach to apply the function to each column in parallel for calculating correlation matrix
+corr_mat = list()
+tic()
+corr_mat <- foreach(i = 1:20, .combine = c) %dopar% {
+  #corr_gbj(ref_genotype[i])
+  list(estimate_ss_cor(ref_pcs = pca, ref_genotypes = as.data.frame(ref_genotype[i]), link_function = 'linear'))
+}
+toc()
+
+
+
+# Use foreach to apply the function to each column in parallel for calculating correlation matrix
+gbj_analysis = list()
+tic()
+gbj_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
+  #corr_gbj(ref_genotype[i])
+  list(GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[i]))
+}
+toc()
+
+
+GBJ(test_stats = vector(na.omit(zstat_df[1])), cor_mat=as.matrix(corr_mat[1]))
+
+as.vector(unlist(na.omit(zstat_df[1])))
+
+
+trial_add <- function(x){
+  return(x+100)
+}
+
+
+
+
 
 ## NEED TO run ref_genotype individually first 
 ## Use that to run run GBJ
@@ -93,8 +136,9 @@ ref_genotype <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
 toc()
 
 
+# Note needed cause already done in previous steps
 #Filtering list with less than two SNPs
-ref_genotype <- Filter(function(x) length(x) >=2, ref_genotype)
+#ref_genotype <- Filter(function(x) length(x) >=2, ref_genotype)
 
 
 # Use foreach to apply the function to each column in parallel
