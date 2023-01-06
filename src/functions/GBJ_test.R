@@ -15,6 +15,19 @@ gbj_test <- function(path, phenoname, chr, organism){
     #marker_df <- marker_df[1:100,1:100]
     genotype_df <- as.data.frame(trial$genotype[[j]])
     
+    
+    #Subsetting genes with only one column
+    subset_one <- function (x) length(na.omit(x)) = 1
+    # Applying the function for each df
+    subset_zstat <- sapply(zstat_df, subset_element)
+    subset_pvalue <- sapply(pvalue_df, subset_element)
+    subset_marker <- sapply(marker_df, subset_element)
+    
+    # Subsetting the data frame with more than 1 elements
+    single_snp <- NULL
+    single_snp <- as.data.frame(rbind(zstat_df[, subset_zstat],pvalue_df[, subset_pvalue],marker_df[, subset_marker]))
+    
+    
     ## Function for Subsetting columns with more than one element 
     subset_element <- function (x) length(na.omit(x)) > 1
     
@@ -69,7 +82,13 @@ gbj_test <- function(path, phenoname, chr, organism){
     # }
 
   }
-  return(results)
+  res <- NULL
+  for(i in 1:chr){
+    x <- as.data.frame(t(as.data.frame(results[[i]], header = FALSE)))
+    x$names <- colnames(zstat_df[1:ncol(zstat_df)])
+    res <- rbind(res,x)
+  }
+  return(res)
 }
 
 names(results[[paste0("chr",2)]][[2]]) <- colnames(zstat_df)[2]
