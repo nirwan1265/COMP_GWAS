@@ -50,23 +50,23 @@ gbj_test <- function(path, phenoname, chr, organism){
       list(GBJ::estimate_ss_cor(ref_pcs = pca, ref_genotypes = as.data.frame(ref_genotype[i]), link_function = 'linear'))
     }
     
-    # gbj_analysis = list()
-    # gbj_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
-    #   list(GBJ::GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]])$GBJ_pvalue)
-    # }
-    # results[[j]] <- gbj_analysis
-    # names(results)[[j]] <- paste0("chr",j)
-    
-    omni_analysis = list()
-    omni_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
-      list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
+    gbj_analysis = list()
+    gbj_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
+      list(GBJ::GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]])$GBJ_pvalue)
     }
-    results[[j]] <- omni_analysis
+    results[[j]] <- gbj_analysis
     names(results)[[j]] <- paste0("chr",j)
+    
+    # omni_analysis = list()
+    # omni_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
+    #   list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
+    # }
+    # results[[j]] <- omni_analysis
+    # names(results)[[j]] <- paste0("chr",j)
 
-    for(j in 1:length(zstat_df)){
-     names(results[[i]][[j]]) <- colnames(zstat_df)[j]
-    }
+    # for(j in 1:length(zstat_df)){
+    #  names(results[[i]][[j]]) <- colnames(zstat_df)[j]
+    # }
 
   }
   return(results)
@@ -75,7 +75,7 @@ gbj_test <- function(path, phenoname, chr, organism){
 names(results[[paste0("chr",2)]][[2]]) <- colnames(zstat_df)[2]
 
 #Required arguments
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 phenoname <- "tot"
 organism <- "Sorghum bicolor"
 chr <- 2
