@@ -123,9 +123,9 @@ gbj_test <- function(path, phenoname, chr, organism){
     for(i in 1:ncol(zstat_df)){
       no_of_snps <- c(no_of_snps,length(na.omit(zstat_df[,i])))
     }
-    for(k in 1:ncol(marker_df)){
-      no_of_markers <- c(no_of_markers, list(marker_df[complete.cases(marker_df),k]))
-    }
+    # for(k in 1:ncol(marker_df)){
+    #   no_of_markers <- c(no_of_markers, list(marker_df[complete.cases(marker_df),k]))
+    # }
 
   }
   
@@ -158,7 +158,7 @@ gbj_test <- function(path, phenoname, chr, organism){
   
   
   # Adding number of markers
-  res$no_of_markers <- no_of_markers
+  #res$no_of_markers <- no_of_markers
   
   #Empyting row name because ewww
   
@@ -168,18 +168,17 @@ gbj_test <- function(path, phenoname, chr, organism){
   
   # Combining tables with 1 and many SNPs- FINAL result
   
-  res <- rbind(res, single_snp) 
-  res <- res %>% dplyr::mutate(pvalue = round(pvalue, digits = 2)) %>% dplyr::arrange(pvalue)
+  res <- rbind(res, single_snp) %>% dplyr::mutate(pvalue = as.double(pvalue)) %>% dplyr::mutate(pvalue = base::round(pvalue, digits = 5)) %>% dplyr::arrange(pvalue)
   
   # Returning the results
   
   return(res)
 
 }
+round
 
 
-
-
+typeof(final_results$pvalue[])
 
 #Required arguments
 path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
