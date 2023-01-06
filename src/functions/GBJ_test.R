@@ -201,6 +201,17 @@ stopCluster(cluster)
 
 
 
-
+df_t <- t(marker_df)
 
 marker_df[complete.cases(marker_df),1]
+df_melt <- reshape2::melt(marker_df,id.vars = c(colnames(marker_df)))
+df_melt <- df_melt[!is.na(df_melt$value), ]
+names(df_melt) <- c("gene","valuess")
+df_melt = reshape2::dcast(df_melt, valuess ~ gene, fun.aggregate = paste, sep = ",")
+
+df_melt <- df_melt %>% dplyr::group_by(gene) %>% summarize(valuess = paste(valuess, collapse = ","), by = df_melt$gene) %>% ungroup()
+
+df_new <- df_melt %>% 
+  distinct(variable, .keep_all = TRUE)
+
+melt
