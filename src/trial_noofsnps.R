@@ -1,4 +1,11 @@
-
+for(i in 1:chr){
+  
+  
+}
+res <- NULL
+for(i in 1:chr){
+  assign("res",)
+}
 res <- NULL
 for(i in 1:chr){
   x <- as.data.frame(t(as.data.frame(final_results[[i]], header = FALSE)))
@@ -9,24 +16,30 @@ for(i in 1:chr){
 res$names <- colnames(zstat_df[1:40])
 res <- res %>% dplyr::select("names","V1") #%>% arrange(V1) %>% rename(GeneName = names, pvalue = V1) %>% mutate(no_of_snps = lofsnps("GeneName"))
 names(res) <- c("GeneName","pvalue")
-
-#Adding number of SNPs
-no_of_snps <- NULL
-for(i in 1:ncol(zstat_df)){
-  no_of_snps <- c(no_of_snps,length(na.omit(zstat_df[,i])))
-}
-res$no_of_SNPs <- no_of_snps[1:40]
-
-#Adding whether the had pvalue combination
 res$pval_combination_GBJ_minP_GHC_SKAT <- "Yes"
+res$no_of_snps <- length(na.omit(colnames(zstat_df[1])))
 
-#Empyting row name because ewww
+
+row.names(res) <- res[,1]
+res <- res %>% mutate(no_of_snps = lofsnps(GeneName))
+
+
+
 row.names(res) <- NULL
+row.names(res)["SORBI_3001G007000"]
 
 
-#Combining tables with 1 and many SNPs
-res <- rbind(res, single_snp) %>% arrange(desc(pvalue))
 
+lofsnps <- function(x){
+  len <- length(na.omit(zstat_df[x]))
+  return(len)
+}
+zstat_df["SORBI_3001G000800"]
+
+
+x <- res %>% mutate(no_of_snps = lofsnps(GeneName))
+
+length(na.omit(zstat_df$SORBI_3001G000800))
 
 # Subset the required data
 pvalue_df <- as.data.frame(trial$preprocess$pvalue[[1]])
@@ -45,10 +58,8 @@ single_snp <- NULL
 single_snp <- as.data.frame(pvalue_df[, subset_pvalue])
 single_snp <- as.data.frame(t(rbind(colnames(single_snp),single_snp[1,])))
 names(single_snp) <- c("GeneName","pvalue")
-single_snp$no_of_SNPs <- 1
 single_snp$pval_combination_GBJ_minP_GHC_SKAT <- "No"
+single_snp$no_of_SNPs <- 1
 row.names(single_snp) <- NULL
 
-typeof
-
-
+x <- rbind(res,single_snp) %>% arrange(pvalue)
