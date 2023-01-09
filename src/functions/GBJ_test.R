@@ -167,7 +167,7 @@ gbj_test <- function(path, phenoname, chr, organism){
 
 
 # #Required arguments
-# path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+# path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 # phenoname <- "tot"
 # organism <- "Sorghum bicolor"
 # chr <- 2

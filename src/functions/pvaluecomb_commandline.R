@@ -1,4 +1,4 @@
-#!/usr/bin/env Rscript --vanilla
+#!/usr/bin/env Rscript 
 
 
 #Load packages
@@ -27,39 +27,49 @@ packages <- c("tidyverse","ggplot2", "Rsamtools","GenomicAlignments","rtracklaye
 suppressMessages(invisible(lapply(packages, library, character.only = TRUE)))
 
 
-
-# Load helper Rscripts with functions
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/data_wrangle.R")
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/preprocess.R")
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/geno_ld.R")
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/pca_ld.R")
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/split_names.R")
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/zval.R")
-
-
-# Load the script file with the main function
-source("/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/gbj_test.R")
-
-
 # OptionParser object
-op <- OptionParser()
+opt_parser <- OptionParser()
 
 
 # Adding arguments
-# p <- arg_parser("GBJ combination with OMNIBUS for GBJ, GHC, and SKAT")
-add_option()
+#p <- arg_parser("GBJ combination with OMNIBUS for GBJ, GHC, and SKAT")
+
 # Add arguments
-op <- add_option(op, c("-p","--path"), type = "character", help="Absolute path of the directory")
+opt_parser$add_option(c("-p","--path"), action = "store",type = "character", default = NULL, help="Absolute path of the directory")
+opt_parser$add_option(c("-f","--filename"), action = "store",type = "character",default = NULL, help="File name of the phenotype without the numbers")
+opt_parser$add_option(c( "-n","--chr_no."), action = "store",type = "numeric", default = NULL, help="Number of chromosomes")
+opt_parser$add_option(c("-o","--organism"), action = "store",type = "character", default = NULL, help="Scientific name of the organism")
 
-op <- add_option(op, c("-f","--filename"), type = "character", help="File name of the phenotype without the numbers")
+#op <- add_option(op, c("-p","--path"), type = "character", help="Absolute path of the directory")
 
-op <- add_option(op, c( "-n","--chr_no."),type = "numeric", help="Number of chromosomes")
+#op <- add_option(op, c("-f","--filename"), type = "character" help="File name of the phenotype without the numbers")
 
-op <- add_option(op, c("-o","--organism", type = "character", help="Scientific name of the organism")
+#op <- add_option(op, c( "-n","--chr_no."),type = "numeric" help="Number of chromosomes")
 
-
+#op <- add_option(op, c("-o","--organism", type = "character", help="Scientific name of the organism")
+                 
+                 
 # Parsing the command line arguments                 
-parse_args(op, args = c("--path","--filename","--chr_no","--organism"))
+opt <- parse_args(opt_parser)
+
+
+
+# Load the script file with the main function
+source("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/gbj_test.R")
+
+# Load helper Rscripts with functions
+source("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/data_wrangle.R")
+source("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/preprocess.R")
+source("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/geno_ld.R")
+source("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/pca_ld.R")
+source("/Users/nirwatandukarn/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/split_names.R")
+source("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/src/functions/zval.R")
+
+# Call the functions 
+geno_ld(chr=opt$chr)
+preprocess(path=opt$path, phenonameopt$phenoname, n=opt$n, organism=opt$organism)
+data_wrangle(path=opt$path, phenoname=opt$phenoname, chr=opt$chr, organism=opt$chromosome)
+gbj_test(path=opt$path, phenonameopt$phenoname, chr=opt$chr, organism=pt$organism)
 
 
 # Extract the values of the arguments

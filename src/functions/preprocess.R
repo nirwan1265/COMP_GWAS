@@ -1,6 +1,17 @@
 #Pre processing step before running GBJ
 
 preprocess <- function(path, phenoname, n, organism){
+  split.names <- function(x,split){
+    split.genename <- unlist(strsplit(x, split = ';', fixed = TRUE))[1]
+    split.genename2 <- unlist(strsplit(split.genename, split = ":", fixed = TRUE))[2]
+    return(split.genename2)
+  }
+  
+  zval <- function(x, output){
+    pvalue <- unlist(as.numeric(x[4]))
+    o <- p.to.Z(pvalue)
+    return(o)
+  }
   
   #Helper lists 
   zstat_list <- list()
@@ -12,7 +23,7 @@ preprocess <- function(path, phenoname, n, organism){
   file_path = paste0(path,"/GWAS/sorghum/")
   
   # Preprocess for Sorghum
-  if(organism == "Sorghum bicolor"){
+  if(organism == "Sorghum"){
     
     # Load Sorghum Genomic Ranges
     a <- 1
