@@ -9,6 +9,7 @@ gbj_test <- function(path, phenoname, chr, organism){
   no_of_pvalue <- NULL
   pvalue_df_list <- NULL
   marker_df_list <- NULL
+  tot_single_snps <- NULL
   
   # Loops indices
   i <- 1
@@ -17,24 +18,20 @@ gbj_test <- function(path, phenoname, chr, organism){
   # Preprocess data
   trial <- data_wrangle(path, phenoname, chr, organism)
   
-  # #Empty helper variables
-  # results <- list()
-  # no_of_snps <- NULL
-  # trial <- data_wrangle(path, phenoname, chr, organism)
-  # #i = 1
-  # res <- NULL
-  # colnames_df <- NULL
-  # k <- 1
-  # no_of_markers <- NULL
+  # Looping through the chromosomes
   for(j in 1:chr){
     # Subset the required data
     zstat_df <- as.data.frame(trial$preprocess$Zstat[[j]]) # i
     pvalue_df <- as.data.frame(trial$preprocess$pvalue[[j]])
     marker_df <- as.data.frame(trial$preprocess$Marker[[j]])
+    
     ############################################################################
+    
     # Subset the genotype
     genotype_df <- as.data.frame(trial$genotype[[j]])
+    
     ############################################################################
+    
     # Subset genes with only one column
     subset_one <- function (x) length(na.omit(x)) == 1
     # Applying the function for pvalue
@@ -48,7 +45,10 @@ gbj_test <- function(path, phenoname, chr, organism){
     single_snp$pval_combination_GBJ_minP_GHC_SKAT <- "No"
     single_snp$list_of_pvalue <- single_snp$pvalue
     row.names(single_snp) <- NULL
+    tot_single_snps <- rbind(tot_single_snps,single_snp)
+    
     ############################################################################s
+    
     ## Function for Sub-setting columns with more than one element
     subset_element <- function (x) length(na.omit(x)) > 1
     # Applying the function for each df
@@ -59,7 +59,9 @@ gbj_test <- function(path, phenoname, chr, organism){
     zstat_df <- zstat_df[, subset_zstat]
     pvalue_df <- pvalue_df[, subset_pvalue]
     marker_df <- marker_df[, subset_marker]
+    
     ############################################################################
+    
     # Subsetting reference genotype
     sub_refgeno <- function(y,z){
       y <- y[!is.na(y)]
@@ -71,10 +73,14 @@ gbj_test <- function(path, phenoname, chr, organism){
     ref_genotype <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
       list(sub_refgeno(marker_df[,i], genotype_df))
     }
+    
     ############################################################################
+    
     # PCA
     pca <- as.data.frame(trial$PCA)
+    
     ############################################################################
+    
     # Paralellizing for calculating correlation matrix
     corr_mat = list()
     corr_mat <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
@@ -82,7 +88,9 @@ gbj_test <- function(path, phenoname, chr, organism){
                                 ref_genotypes = as.data.frame(ref_genotype[i]),
                                 link_function = 'linear'))
     }
+    
     ############################################################################
+    
     # Parallelizing GBJ analysis
     gbj_analysis = list()
     gbj_analysis <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
@@ -91,7 +99,10 @@ gbj_test <- function(path, phenoname, chr, organism){
     }
     results[[j]] <- gbj_analysis
     names(results)[[j]] <- paste0("chr",j)
+    
     ############################################################################
+    
+    #Parallelizing OMNI analysis
     # omni_analysis = list()
     # omni_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
     #   list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
@@ -101,62 +112,52 @@ gbj_test <- function(path, phenoname, chr, organism){
     # for(j in 1:length(zstat_df)){
     #  names(results[[i]][[j]]) <- colnames(zstat_df)[j]
     # }
+    
+    ############################################################################
+    
+    # Combining the results
     x <- as.data.frame(t(as.data.frame(results[[j]], header = FALSE)))
     res <- rbind(res,x)
     
+    ############################################################################
+    
+    # Getting the number ot SNPs and list of pvalues
     colnames_df <- c(colnames_df,colnames(zstat_df[1:ncol(zstat_df)]))
     for(i in 1:ncol(zstat_df)){
       no_of_snps <- c(no_of_snps,length(na.omit(zstat_df[,i])))
     }
     no_of_pvalue <- c(no_of_pvalue, apply(t(as.data.frame(pvalue_df)), 1, function(row) paste(na.omit(row), collapse = ",")))
-    #no_of_pvalue <- apply(t(pvalue_df), 1, function(row) paste(na.omit(row), collapse = ","))
-    #list_of_pvalue <- append(list_of_pvalue,list(no_of_pvalue))
-    #list_of_pvalue <- as.data.frame(list_of_pvalue)
-    # for(k in 1:ncol(marker_df)){
-    #   no_of_markers <- c(no_of_markers, list(marker_df[complete.cases(marker_df),k]))
-    # }
+    
+    ############################################################################
     
   }
-  # Getting the results
-  #res <- NULL
-  # for(i in 1:chr){
-  #   x <- as.data.frame(t(as.data.frame(results[[i]], header = FALSE)))
-  #   res <- rbind(res,x)
-  #   x <- NULL
-  # }
+  ##############################################################################
+  
   # Data wrangling
   res$names <- colnames_df
-  #res$names <- colnames(zstat_df[1:ncol(zstat_df)])
   res <- res %>% dplyr::select("names","V1")
   names(res) <- c("GeneName","pvalue")
-  #Adding number of SNPs
-  # for(i in 1:ncol(zstat_df)){
-  #   no_of_snps <- c(no_of_snps,length(na.omit(zstat_df[,i])))
-  # }
-  
+
+  # Adding the total number of SNPs
   res$no_of_SNPs <- no_of_snps
-  #res$list_of_pvalue <- t(list_of_pvalue)
-  #Adding whether the had pvalue combination
+  
+  # Combination or not
   res$pval_combination_GBJ_minP_GHC_SKAT <- "Yes"
   
   # Adding number of pvalue
   res$list_of_pvalue <- no_of_pvalue
   
-  
   #Empyting row name because ewww
   row.names(res) <- NULL
-  ##############################################################################
+  
   # Combining tables with 1 and many SNPs- FINAL result
-  res <- rbind(res, single_snp) %>% dplyr::mutate(pvalue = as.double(pvalue))  %>% dplyr::arrange(pvalue) #%>% dplyr::mutate(pvalue = base::format(pvalue, scientific = TRUE, digits = 5))
+  res <- rbind(res, tot_single_snps) %>% dplyr::mutate(pvalue = as.double(pvalue))  %>% dplyr::arrange(pvalue) #%>% dplyr::mutate(pvalue = base::format(pvalue, scientific = TRUE, digits = 5))
   
+  ##############################################################################
   
-  # Returning the results
-  #return(results)
-  #return(single_snp)
-  #return(list_of_pvalue)
+  # Returning the final results
   return(res)
 }
-
 
 
 #Required arguments
@@ -176,7 +177,3 @@ toc()
 
 # Stop the parallel cluster
 stopCluster(cluster)
-
-res_2 <- final_results
-results_2 <- final_results
-x <- final_results
