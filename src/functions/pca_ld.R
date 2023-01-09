@@ -4,5 +4,5 @@ pca_ld <- function(pca){
   pca <- pca[,-1]
 }
 
-pca <- pca_ld()
+#pca <- pca_ld()
 

@@ -13,7 +13,7 @@ geno_ld <- function(chr){
   return(geno)
 }
 
-tic()
-geno <- geno_ld(chr)
-toc()
+# tic()
+# geno <- geno_ld(chr)
+# toc()
 
