@@ -38,7 +38,7 @@ A genotype text file with MAF numbering with markers in the column and subsequen
 ***
 3. PCA file
 
-The PCA file that you used to run the linear mixed model. 10 PCAs are preferred. 
+The PCA file that you used to run the generalized linear model. 10 PCAs are preferred. 
 
 |PCA1|PCA2|PCA3|PCA4|PCA5|PCA6|PCA7|PCA8|PCA9|PCA10|
 |---|---|---|---|---|---|---|---|---|---|
