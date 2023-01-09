@@ -91,11 +91,11 @@ preprocess <- function(path, phenoname, n, organism){
 
 # Usage
 # Not run
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-filename <- "tot"
-organism <- "Sorghum bicolor"
-chr <- 3
-preprocess_data <- preprocess(path, filename, chr,  organism)
+#path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+#filename <- "tot"
+#organism <- "Sorghum bicolor"
+#chr <- 3
+#preprocess_data <- preprocess(path, filename, chr,  organism)
 
 
 

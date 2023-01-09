@@ -1,4 +1,7 @@
 gbj_test <- function(path, phenoname, chr, organism){
+  #Register nodes
+  cluster <- makeCluster(parallel::detectCores() - 1)
+  registerDoParallel(cluster)
   
   #Empty helper variables
   results <- list()
@@ -157,23 +160,26 @@ gbj_test <- function(path, phenoname, chr, organism){
   
   # Returning the final results
   return(res)
+  # Stop the parallel cluster
+  stopCluster(cluster)
+  
 }
 
 
-#Required arguments
-path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-phenoname <- "tot"
-organism <- "Sorghum bicolor"
-chr <- 2
-
-#Register nodes
-cluster <- makeCluster(parallel::detectCores() - 1)
-registerDoParallel(cluster)
-
-#Getting the results with time
-tic()
-final_results <- gbj_test(path, phenoname, chr, organism)
-toc()
-
-# Stop the parallel cluster
-stopCluster(cluster)
+# #Required arguments
+# path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+# phenoname <- "tot"
+# organism <- "Sorghum bicolor"
+# chr <- 2
+# 
+# #Register nodes
+# cluster <- makeCluster(parallel::detectCores() - 1)
+# registerDoParallel(cluster)
+# 
+# #Getting the results with time
+# tic()
+# final_results <- gbj_test(path, phenoname, chr, organism)
+# toc()
+# 
+# # Stop the parallel cluster
+# stopCluster(cluster)
