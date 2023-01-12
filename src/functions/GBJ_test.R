@@ -194,9 +194,9 @@ path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Githu
 phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","solHi_","solLo_","solMo_","solmod_","solVL_","stp1", "stp2", "stp3","stp10_","tot","TP1","TP2")
 phenoname <- c("stp1", "stp2", "stp3","stp10_","tot","TP1","TP2")
 # phenoname <- c("NPlim","occ")
-# phenoname <- "tot"
-organism <- "Sorghum"
-chr <- 10
+phenoname <- "tot"
+organism <- "Zea"
+chr <- 1
 
 #Register nodes
 cluster <- makeCluster(parallel::detectCores() - 1)
@@ -205,7 +205,7 @@ registerDoParallel(cluster)
 #Getting the results with time
 tic()
 for (m in phenoname){
-  assign(paste0(m,"_gbj"), gbj_test(path,m,chr,organism))
+  assign(paste0(m,"_gbj_m"), gbj_test(path,m,chr,organism))
 }
 toc()
 
