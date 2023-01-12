@@ -1,17 +1,17 @@
 #Pre processing step before running GBJ
 
 preprocess <- function(path, phenoname, n, organism){
-  # split.names <- function(x,split){
-  #   split.genename <- unlist(strsplit(x, split = ';', fixed = TRUE))[1]
-  #   split.genename2 <- unlist(strsplit(split.genename, split = ":", fixed = TRUE))[2]
-  #   return(split.genename2)
-  # }
-  # 
-  # zval <- function(x, output){
-  #   pvalue <- unlist(as.numeric(x[4]))
-  #   o <- p.to.Z(pvalue)
-  #   return(o)
-  # }
+  split.names <- function(x,split){
+    split.genename <- unlist(strsplit(x, split = ';', fixed = TRUE))[1]
+    split.genename2 <- unlist(strsplit(split.genename, split = ":", fixed = TRUE))[2]
+    return(split.genename2)
+  }
+  
+  zval <- function(x, output){
+    pvalue <- unlist(as.numeric(x[4]))
+    o <- p.to.Z(pvalue)
+    return(o)
+  }
   
   #Helper lists 
   zstat_list <- list()
@@ -102,11 +102,11 @@ preprocess <- function(path, phenoname, n, organism){
 
 # Usage
 # Not run
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-filename <- "NPlim"
-organism <- "Sorghum"
-chr <- 1
-preprocess_data <- preprocess(path, filename, chr,  organism)
+#path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+#filename <- "tot"
+#organism <- "Sorghum bicolor"
+#chr <- 3
+#preprocess_data <- preprocess(path, filename, chr,  organism)
 
 
 

@@ -1,7 +1,7 @@
 gbj_test <- function(path, phenoname, chr, organism){
   #Register nodes
-  #cluster <- makeCluster(parallel::detectCores() - 1)
-  #registerDoParallel(cluster)
+  cluster <- makeCluster(parallel::detectCores() - 1)
+  registerDoParallel(cluster)
   
   #Empty helper variables
   results <- list()
@@ -107,12 +107,14 @@ gbj_test <- function(path, phenoname, chr, organism){
     
     #Parallelizing OMNI analysis
     # omni_analysis = list()
-    # omni_analysis <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
+    # omni_analysis <- foreach(i = 1:20, .combine = c) %dopar% {
     #   list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
     # }
     # results[[j]] <- omni_analysis
-    # names(results)[[j]] <- paste0("chr",j)
-    
+    # names(results)[[j]] <- paste0(“chr”,j)
+    # for(j in 1:length(zstat_df)){
+    #  names(results[[i]][[j]]) <- colnames(zstat_df)[j]
+    # }
     
     ############################################################################
     
@@ -159,7 +161,7 @@ gbj_test <- function(path, phenoname, chr, organism){
   # Returning the final results
   return(res)
   # Stop the parallel cluster
-  #stopCluster(cluster)
+  stopCluster(cluster)
   
 }
 
@@ -181,44 +183,3 @@ gbj_test <- function(path, phenoname, chr, organism){
 # 
 # # Stop the parallel cluster
 # stopCluster(cluster)
-
-
-
-################################################################################
-# for multiple phenotypes
-################################################################################
-
-# #Required arguments
-
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","solHi_","solLo_","solMo_","solmod_","solVL_","stp1", "stp2", "stp3","stp10_","tot","TP1","TP2")
-phenoname <- c("stp1", "stp2", "stp3","stp10_","tot","TP1","TP2")
-# phenoname <- c("NPlim","occ")
-# phenoname <- "tot"
-organism <- "Sorghum"
-chr <- 10
-
-#Register nodes
-cluster <- makeCluster(parallel::detectCores() - 1)
-registerDoParallel(cluster)
-
-#Getting the results with time
-tic()
-for (m in phenoname){
-  assign(paste0(m,"_gbj"), gbj_test(path,m,chr,organism))
-}
-toc()
-
-
-# Save as CSV
-for(i in phenoname){
-  write.csv(get(paste0(i,"_gbj")),(paste0(i,"_gbj.csv")), row.names = FALSE)
-}
-
-#Save as RDS
-for(i in phenoname){
-  saveRDS(get(paste0(i,"_gbj")),(paste0(i,".RDS")))
-}
-
-# Stop the parallel cluster
-stopCluster(cluster)
