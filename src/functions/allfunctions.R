@@ -6,6 +6,7 @@ list.of.packages <- c(
   "palmerpenguins",
   "tidyverse",
   "kableExtra"
+  
 )
 
 for(package.i in list.of.packages){
@@ -16,6 +17,7 @@ for(package.i in list.of.packages){
     )
   )
 }
+
 
 # Function for putting everything in a proper list
 data_wrangle <- function(path, phenoname, chr, organism){
@@ -247,4 +249,10 @@ zval <- function(x, output){
   pvalue <- unlist(as.numeric(x[4]))
   o <- p.to.Z(pvalue)
   return(o)
+}
+
+split.names_m <- function(x,split){
+  split.genename <- unlist(strsplit(x, split = ';', fixed = TRUE))[1]
+  split.genename2 <- unlist(strsplit(split.genename, split = "=", fixed = TRUE))[2]
+  return(split.genename2)
 }
