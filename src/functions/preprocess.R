@@ -9,10 +9,10 @@ preprocess <- function(path, phenoname, n, organism){
   # Set working directory
   setwd(path)
   #file_path = paste0(path,"/GWAS/sorghum/")
-  file_path = paste0(path,"/GWAS/maize/")
+  #file_path = paste0(path,"/GWAS/maize/")
   # Preprocess for Sorghum
   if(organism == "Sorghum"){
-    
+    file_path = paste0(path,"/GWAS/sorghum/")
     # Load Sorghum Genomic Ranges
     a <- 1
     for(i in sprintf("%02d",1:chr)){
@@ -69,6 +69,7 @@ preprocess <- function(path, phenoname, n, organism){
     }
   }
   else if(organism == "Zea"){
+    file_path = paste0(path,"/GWAS/maize/")
     # Load maize Genomic Ranges
     a <- 1
     for(i in sprintf("%02d",1:chr)){
@@ -147,7 +148,8 @@ path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Githu
 phenoname <- "NPlim"
 organism <- "Zea"
 chr <- 1
-preprocess_data <- preprocess(path, filename, chr,  organism)
+preprocess_data <- preprocess(path, phenoname, chr,  organism)
+
 system("ls")
 
 
