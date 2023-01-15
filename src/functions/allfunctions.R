@@ -208,7 +208,7 @@ for(package.i in list.of.packages){
   )
 }
 
-
+BiocManager::install()
 split.names <- function(x,split){
   if(organism == "Sorghum"){
     split.genename <- unlist(strsplit(x, split = ';', fixed = TRUE))[1]
