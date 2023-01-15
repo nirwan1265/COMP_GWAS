@@ -98,7 +98,7 @@ preprocess <- function(path, phenoname, n, organism){
       assign(paste0("zstat",i), dcast(setDT(e), Gene~rowid(Gene, prefix = "zstat"), value.var = "zstat"))
       assign(paste0("Marker",i), dcast(setDT(e), Gene~rowid(Gene, prefix = "Marker"), value.var = "Marker"))
       assign(paste0("pvalue",i), dcast(setDT(e), Gene~rowid(Gene, prefix = "pvalue"), value.var = "pvalue"))
-      assign(paste0("genename",i),apply(get(paste0("Marker",i)),1,split.names_m))
+      assign(paste0("genename",i),apply(get(paste0("Marker",i)),1,split.names))
       f <- get(paste0("zstat",i))
       f[,1]<- get(paste0("genename",i))
       f <- as.data.frame(t(f))
