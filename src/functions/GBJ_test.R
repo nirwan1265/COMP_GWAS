@@ -196,8 +196,8 @@ path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Githu
 #Maize
 phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo","sol_Mo","sol","sol_VL","stp10", "stp20", "stp30","stp100","tot","TP1","TP2")
 phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo","sol_VL","sol")#,"stp10","stp20","stp30","stp100", "tot","TP1","TP2")
-phenoname <- c("stp10","stp20","stp30","stp100", "tot","TP1","TP2")
-#phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo")
+phenoname <- c("tot","TP1","TP2","NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo","sol_VL","sol")
+#phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo",)
 #phenoname <- "tot"
 organism <- "Zea"
 chr <- 10
@@ -209,6 +209,7 @@ registerDoParallel(cluster)
 #Getting the results with time
 tic()
 for (m in phenoname){
+  print(m)
   assign(paste0(m,"_omni_maize"), gbj_test(path,m,chr,organism))
 }
 toc()
@@ -226,3 +227,4 @@ for(i in phenoname){
 
 # Stop the parallel cluster
 stopCluster(cluster)
+system("ls")
