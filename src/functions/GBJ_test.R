@@ -210,7 +210,7 @@ registerDoParallel(cluster)
 tic()
 for (m in phenoname){
   print(m)
-  assign(paste0(m,"_omni_maize"), gbj_test(path,m,chr,organism))
+  assign(paste0(m,"_omni_maize"), gbj_test(path,phenotype,chr,organism))
 }
 toc()
 
@@ -228,3 +228,6 @@ for(i in phenoname){
 # Stop the parallel cluster
 stopCluster(cluster)
 system("ls")
+
+
+gbj_test()
