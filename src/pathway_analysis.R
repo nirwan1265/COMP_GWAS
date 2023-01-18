@@ -10,27 +10,17 @@ pathway <- pathway[-1,]
 
 
 #Read the combined pvalue files
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Results/pvalues.combination")
-# for(i in sprintf("%02d", 1:10)){
-#   assign(paste0("pvalue.combine",i), readRDS(paste0("pvalue.combine",i,".RDS")))
-# }
-
-#All genes:
-# write.csv(GBJ_all,"GBJ_all.csv")
-# write.csv(GHC_all,"GHC_all.csv")
-# write.csv(minP_all,"minP_all.csv")
-# write.csv(SKAT_all,"SKAT_all.csv")
-# write.csv(OMNI_all,"OMNI_all.csv")
-# write.csv(CCT_all,"CCT_all.csv")
-# Read files
+#Get the final table for Omni and Magma
+sorghum_omni
+sorghum_omni$GeneName <- gsub("SORBI","SORBI_", sorghum_omni$GeneName)
 
 
 #Filtering the pathway genes
 x <- as.data.frame(as.matrix(NA))
 for(i in 1:ncol(pathway)){
-  for(j in 1:nrow(OMNI_all)){
-    if(rownames(filtered_genes_OMNI)[j] %in% pathway[,i] == TRUE){
-      x[j,i] <- rownames(filtered_genes_OMNI)[j] 
+  for(j in 1:nrow(sorghum_omni)){
+    if(sorghum_omni[j,1] %in% pathway[,i] == TRUE){
+      x[j,i] <- sorghum_omni[j,1]
     }else {
       x[j,i] <- 0
     }  
