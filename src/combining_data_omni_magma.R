@@ -104,7 +104,7 @@ total_omni[,1:ncol(total_omni)] <- apply(total_omni,2,function(x) gsub("_omni_ma
 
 total_omni <- total_omni %>% mutate(pvalue = as.numeric(as.character(pvalue))) %>% arrange(pvalue)
 
-write.csv(total_omni,"OMNI_maize.csv",row.names = FALSE)
+#write.csv(total_omni,"OMNI_maize.csv",row.names = FALSE)
 
 
 
@@ -136,5 +136,5 @@ names(total_magma)[6] <- "phenotype"
 total_magma[,1:ncol(total_magma)] <- apply(total_magma,2,function(x) gsub("_magma_maize_multi_snpwise.genes.out","",x))
 total_magma <- total_magma %>% arrange(P_MULTI)
 
-write.csv(total_magma,"MAGMA_maize.csv",row.names = FALSE)
+#write.csv(total_magma,"MAGMA_maize.csv",row.names = FALSE)
 
