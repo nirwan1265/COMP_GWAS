@@ -6,7 +6,7 @@
 ################################################################################
 
 # OMNIBUS
-omni_path <- "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data/Results/sorghum/OMNI_RDS"
+omni_path <- "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data/Results/sorghum/OMNI_RDS"
 omni_files <- list.files(omni_path, pattern = "RDS")
 
 for(file in omni_files){
@@ -33,8 +33,14 @@ total_omni[,1:ncol(total_omni)] <- apply(total_omni,2,function(x) gsub("_","",x)
 
 total_omni <- total_omni %>% mutate(pvalue = as.numeric(as.character(pvalue))) %>% arrange(pvalue)
 
-write.csv(total_omni,"OMNI_sorghum.csv",row.names = FALSE)
+#write.csv(total_omni,"OMNI_sorghum.csv",row.names = FALSE)
 
+if("total_omni" %in% ls()) {
+  
+  # remove all variables except for "Hello"
+  rm(list = setdiff(ls(), "total_omni"))
+  
+}
 
 
 # MAGMA
