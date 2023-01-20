@@ -1,4 +1,5 @@
 setwd("~/Documents/RubenLab/Data for sorghum/sorghum/harvester")
+
 #setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Data for sorghum/sorghum/harvester")
 #BiocManager::install("liftOver")
 library(liftOver)
@@ -6,6 +7,7 @@ library(dplyr)
 library(GenomicRanges)
 #BiocManager::install("regioneR")
 library(regioneR)
+library(rtracklayer)
 
 # Loading "colm" dataframe with PCAdapt pvalues
 load("pcadapt_corrected.Rimage", verbose = TRUE)
@@ -55,7 +57,8 @@ PCAdapt_v2 <- makeGRangesFromDataFrame(PCAdapt,
                                        end.field="BP") 
 
 PCAdapt_v4 <- liftOver(PCAdapt_v2,ch) %>% unlist()
-saveRDS(PCAdapt_v4, file= "PCAdapt_v4.RDS")
+
+#saveRDS(PCAdapt_v4, file= "PCAdapt_v4.RDS")
 
 #Converting to V5
 

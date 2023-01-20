@@ -14,7 +14,7 @@ geno_ld <- function(organism,chr){
   }
   else {
     for(i in 1:chr){
-      assign(paste0("geno",i), vroom(paste0("/Users/nirwantandukar/Documents/RubenLab/Maize/perchr/numerical_MAF_pheno_filtered/geno",i,".txt")))
+      assign(paste0("geno",i), vroom(paste0("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/MAF/chr",i,"_MAF_MAF0.01_pheno.txt")))
       geno <- c(geno, list(get(paste0("geno",i))))
       names(geno)[i] <- paste0("geno",i)
     }
@@ -24,7 +24,7 @@ geno_ld <- function(organism,chr){
 }
 
 
-tic()
-geno <- geno_ld(1)
-toc()
+# tic()
+# geno <- geno_ld("Zea",1)
+# toc()
 

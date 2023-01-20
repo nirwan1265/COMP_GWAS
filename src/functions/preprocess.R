@@ -144,13 +144,12 @@ preprocess <- function(path, phenoname, n, organism){
 
 # Usage
 # Not run
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-phenoname <- "NPlim"
-organism <- "Zea"
-chr <- 1
-preprocess_data <- preprocess(path, phenoname, chr,  organism)
+# path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+# phenoname <- "NPlim"
+# organism <- "Zea"
+# chr <- 1
+# preprocess_data <- preprocess(path, phenoname, chr,  organism)
 
-system("ls")
 
 
 

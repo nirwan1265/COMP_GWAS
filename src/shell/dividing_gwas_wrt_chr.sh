@@ -1,5 +1,6 @@
 #!/bin/zsh
-## chr 1 will have S1 and S10 so will have to delete S10 manually cause laze to write script
+# chr 1 has 1 and 10 so remove 10
+# in maize chromosome 10 has a random chr 4's SNPs in the first line so remove that too
 
 head -n 1 tot.txt > header.txt
 
