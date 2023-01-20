@@ -38,13 +38,14 @@ sorghum.pathway <- sorghum.pathway[,colSums(sorghum.pathway != 0) > 0]
 sorghum.pathway <- sorghum.pathway[,order(colSums(sorghum.pathway != 0), decreasing = TRUE)]
 
 #SAVING AND READING pathway files
-write.csv(sorghum.pathway,"pathway_OMNI.csv")
+#write.csv(sorghum.pathway,"pathway_OMNI_sorghum.csv")
 
-
+trial <- sorghum_omni[,c(1,4)]
 ####################################################################################
 ####################################################################################
 
-# pvalue combination for the pathways
+# Adding the pvalues
+merged_table <- merge(sorghum.pathway, trial, all.x = TRUE)
 
 
 
