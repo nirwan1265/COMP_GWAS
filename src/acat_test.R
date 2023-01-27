@@ -20,7 +20,6 @@ pheno_name$phenotype <- lapply(strsplit(pheno_name$phenotype , ","), as.characte
 
 #Creating a new dataframe
 results_acat <- data.frame(start=integer(), end=integer(), acat_result=numeric())
-hello darkness my old friend
 
 
 # looping through rows and applying acat function for each value in col1

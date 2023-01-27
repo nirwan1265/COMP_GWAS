@@ -1,5 +1,6 @@
 library(pcaL1)
 library(vroom)
+library(glmnet)
 setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Phenotype")
 pheno <- read.csv("Maize_allphospho.csv")
 
@@ -40,7 +41,7 @@ library(caret)
 setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data/PCA")
 pca <- read.table("maize/maize_PCA.txt",header = T)
 dim(pca)
-pca <- pca[,c(-1,-3:-11)]
+#pca <- pca[,c(-1,-3:-11)]
 # Giving weights to the Eigen Vector:
 W = matrix(c(3,2,1,1,1,1,1,1,1,1), ncol = 1)
 
@@ -70,3 +71,5 @@ rownames(imp_sorted) <- NULL
 imp_sorted$pheno <- sapply(strsplit(imp_sorted$pheno, ")"), "[",2)
 
 
+
+##############
