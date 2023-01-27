@@ -56,3 +56,34 @@ imp_sorted <- imp[order(-imp$Overall),]
 imp_sorted <- cbind(imp_sorted, rownames(imp))
 imp_sorted <- imp_sorted[1:28,]
 
+
+
+################################################################################
+
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data/PCA/maize")
+maize_PCA <- read.table("maize_PCA.txt", header = T)
+maize_PCA <- maize_PCA[,-1]
+
+
+pls_model <- plsr(as.matrix(maize_PCA)~as.matrix(pheno[,2:29]), ncomp = 1)
+
+
+
+imp <- as.data.frame(varImp(pls_model))
+
+
+imp <- as.data.frame(imp[,1])
+imp_df <- as.data.frame(imp)
+imp_df$pheno <- rownames(imp)
+
+imp_sorted <- imp_df[order(-imp_df$Overall),]
+top_n_pheno <- imp_sorted[1:28,]
+imp_sorted <- imp[order(-imp$Overall),]
+imp_sorted <- cbind(imp_sorted, rownames(imp))
+imp_sorted <- imp_sorted[1:28,]
+
+
+
+cor_matrix <- cor(maize_PCA, pheno[,2:29])
+cor_matrix_abs <- abs(cor_matrix)
+sorted_cor_matrix <- cor_matrix_abs[order(-cor_matrix_abs),]
