@@ -39,7 +39,7 @@ geno_ld <- function(organism,chr){
   }
   else {
     for(i in 1:chr){
-      assign(paste0("geno",i), vroom(paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/MAF/chr",i,"_MAF_MAF0.01_pheno.txt")))
+      assign(paste0("geno",i), vroom(paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf/chr",i,".hmp.txt")))
       geno <- c(geno, list(get(paste0("geno",i))))
       names(geno)[i] <- paste0("geno",i)
     }
@@ -50,20 +50,20 @@ system("ls")
 geno <- geno_ld("Zea",10)
 
 
-x <- as.numeric(gsub("S1_","",names(geno[["geno1"]])))
-x <- data.frame(names(geno[["geno1"]]),as.numeric(gsub("S1_","",names(geno[["geno1"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
+###############################################################################
+# Overlifting Genome from v2 to v5
+
+geno1 <- as.data.frame(geno[["geno1"]])
+geno1 <- as.data.frame(geno1[,c(1,3,4)])
 
 
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno1,
                                       keep.extra.columns=TRUE,
                                       ignore.strand=TRUE,
                                       seqinfo = seqinfo(AGPv2),  # Sanity check
-                                      seqnames.field="chr",
-                                      start.field="ps",
-                                      end.field="ps")
+                                      seqnames.field="chrom",
+                                      start.field="pos",
+                                      end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -71,28 +71,26 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S1_",pheno_v5$start)
 
-geno1 <- geno[["geno1"]]
-geno1 <- geno1[pheno_v5$SNP]
-names(geno1) <- pheno_v5$newSNP
-geno1[1:4,1:4]
-write.table(geno1,"geno1.txt", quote = F, row.names = F)
+
+geno1 <- as.data.frame(geno[["geno1"]])
+geno1 <- geno1[geno1$`rs#` %in% pheno_v5$`rs.`, ]
+geno1$`rs#` <- pheno_v5$newSNP
+geno1$pos <- pheno_v5$start
+  
+write.table(geno1,"geno1.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+geno2 <- as.data.frame(geno[["geno2"]])
+geno2 <- as.data.frame(geno2[,c(1,3,4)])
 
 
-###################################################################################################
-x <- as.numeric(gsub("S2_","",names(geno[["geno2"]])))
-x <- data.frame(names(geno[["geno2"]]),as.numeric(gsub("S2_","",names(geno[["geno2"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
-
-
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno2,
                                      keep.extra.columns=TRUE,
                                      ignore.strand=TRUE,
                                      seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -100,27 +98,27 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S2_",pheno_v5$start)
 
-geno2 <- geno[["geno2"]]
-geno2 <- geno2[pheno_v5$SNP]
-names(geno2) <- pheno_v5$newSNP
-geno2[1:4,1:4]
-write.table(geno2,"geno2.txt", quote = F, row.names = F)
 
-############
-x <- as.numeric(gsub("S3_","",names(geno[["geno3"]])))
-x <- data.frame(names(geno[["geno3"]]),as.numeric(gsub("S3_","",names(geno[["geno3"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
+geno2 <- as.data.frame(geno[["geno2"]])
+geno2 <- geno2[geno2$`rs#` %in% pheno_v5$`rs.`, ]
+geno2$`rs#` <- pheno_v5$newSNP
+geno2$pos <- pheno_v5$start
+
+write.table(geno2,"geno2.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno3 <- as.data.frame(geno[["geno3"]])
+geno3 <- as.data.frame(geno3[,c(1,3,4)])
 
 
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno3,
                                      keep.extra.columns=TRUE,
                                      ignore.strand=TRUE,
                                      seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -128,26 +126,27 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S3_",pheno_v5$start)
 
-geno3 <- geno[["geno3"]]
-geno3 <- geno3[pheno_v5$SNP]
-names(geno3) <- pheno_v5$newSNP
-geno3[1:4,1:4]
-write.table(geno3,"geno3.txt", quote = F, row.names = F)
-######3
-x <- as.numeric(gsub("S4_","",names(geno[["geno4"]])))
-x <- data.frame(names(geno[["geno4"]]),as.numeric(gsub("S4_","",names(geno[["geno4"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
+
+geno3 <- as.data.frame(geno[["geno3"]])
+geno3 <- geno3[geno3$`rs#` %in% pheno_v5$`rs.`, ]
+geno3$`rs#` <- pheno_v5$newSNP
+geno3$pos <- pheno_v5$start
+
+write.table(geno3,"geno3.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno4 <- as.data.frame(geno[["geno4"]])
+geno4 <- as.data.frame(geno4[,c(1,3,4)])
 
 
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno4,
                                      keep.extra.columns=TRUE,
                                      ignore.strand=TRUE,
                                      seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -155,26 +154,27 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S4_",pheno_v5$start)
 
-geno4 <- geno[["geno4"]]
-geno4 <- geno4[pheno_v5$SNP]
-names(geno4) <- pheno_v5$newSNP
-write.table(geno4,"geno4.txt", quote = F, row.names = F)
 
-#####
-x <- as.numeric(gsub("S5_","",names(geno[["geno5"]])))
-x <- data.frame(names(geno[["geno5"]]),as.numeric(gsub("S5_","",names(geno[["geno5"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
+geno4 <- as.data.frame(geno[["geno4"]])
+geno4 <- geno4[geno4$`rs#` %in% pheno_v5$`rs.`, ]
+geno4$`rs#` <- pheno_v5$newSNP
+geno4$pos <- pheno_v5$start
+
+write.table(geno4,"geno4.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno5 <- as.data.frame(geno[["geno5"]])
+geno5 <- as.data.frame(geno5[,c(1,3,4)])
 
 
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno5,
                                      keep.extra.columns=TRUE,
                                      ignore.strand=TRUE,
                                      seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -182,26 +182,27 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S5_",pheno_v5$start)
 
-geno5 <- geno[["geno5"]]
-geno5 <- geno5[pheno_v5$SNP]
-names(geno5) <- pheno_v5$newSNP
-write.table(geno5,"geno5.txt", quote = F, row.names = F)
 
-#############
-x <- as.numeric(gsub("S6_","",names(geno[["geno6"]])))
-x <- data.frame(names(geno[["geno6"]]),as.numeric(gsub("S6_","",names(geno[["geno6"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
+geno5 <- as.data.frame(geno[["geno5"]])
+geno5 <- geno5[geno5$`rs#` %in% pheno_v5$`rs.`, ]
+geno5$`rs#` <- pheno_v5$newSNP
+geno5$pos <- pheno_v5$start
+
+write.table(geno5,"geno5.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno6 <- as.data.frame(geno[["geno6"]])
+geno6 <- as.data.frame(geno6[,c(1,3,4)])
 
 
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno6,
                                      keep.extra.columns=TRUE,
                                      ignore.strand=TRUE,
                                      seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -209,117 +210,27 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S6_",pheno_v5$start)
 
-geno6 <- geno[["geno6"]]
-geno6 <- geno6[pheno_v5$SNP]
-names(geno6) <- pheno_v5$newSNP
-write.table(geno6,"geno6.txt", quote = F, row.names = F)
-#######
-x <- as.numeric(gsub("S8_","",names(geno[["geno8"]])))
-x <- data.frame(names(geno[["geno8"]]),as.numeric(gsub("S8_","",names(geno[["geno8"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
+
+geno6 <- as.data.frame(geno[["geno6"]])
+geno6 <- geno6[geno6$`rs#` %in% pheno_v5$`rs.`, ]
+geno6$`rs#` <- pheno_v5$newSNP
+geno6$pos <- pheno_v5$start
+
+write.table(geno6,"geno6.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno7 <- as.data.frame(geno[["geno7"]])
+geno7 <- as.data.frame(geno7[,c(1,3,4)])
 
 
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
+pheno_v2 <- makeGRangesFromDataFrame(geno7,
                                      keep.extra.columns=TRUE,
                                      ignore.strand=TRUE,
                                      seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
-
-
-pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
-pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
-pheno_v5 <- data.frame(pheno_v5)
-pheno_v5$newSNP <- paste0("S8_",pheno_v5$start)
-
-geno8 <- geno[["geno8"]]
-
-geno8 <- geno8[pheno_v5$SNP]
-names(geno8) <- pheno_v5$newSNP
-geno8[1:4,1:4]
-write.table(geno8,"geno8.txt", quote = F, row.names = F)
-
-########3
-x <- as.numeric(gsub("S9_","",names(geno[["geno9"]])))
-x <- data.frame(names(geno[["geno9"]]),as.numeric(gsub("S9_","",names(geno[["geno9"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
-
-
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
-                                     keep.extra.columns=TRUE,
-                                     ignore.strand=TRUE,
-                                     seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
-
-
-pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
-pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
-pheno_v5 <- data.frame(pheno_v5)
-pheno_v5$newSNP <- paste0("S9_",pheno_v5$start)
-
-geno9 <- geno[["geno9"]]
-
-geno9 <- geno9[pheno_v5$SNP]
-names(geno9) <- pheno_v5$newSNP
-geno9[1:4,1:4]
-write.table(geno9,"geno9.txt", quote = F, row.names = F)
-
-
-#######3x <- as.numeric(gsub("S10_","",names(geno[["geno10"]])))
-x <- data.frame(names(geno[["geno10"]]),as.numeric(gsub("S10_","",names(geno[["geno10"]]))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
-
-
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
-                                     keep.extra.columns=TRUE,
-                                     ignore.strand=TRUE,
-                                     seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
-
-
-pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
-pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
-pheno_v5 <- data.frame(pheno_v5)
-pheno_v5$newSNP <- paste0("S10_",pheno_v5$start)
-
-geno10 <- geno[["geno10"]]
-
-geno10 <- geno10[pheno_v5$SNP]
-names(geno10) <- pheno_v5$newSNP
-geno10[1:4,1:4]
-write.table(geno10,"geno10.txt", quote = F, row.names = F)
-###########
-
-system("ls")
-#geno7 <- read.table("chr7_MAF_MAF0.01_pheno.txt", header = T)
-geno7 <- vroom("chr7_MAF_MAF0.01_pheno.txt")
-
-
-x <- as.numeric(gsub("S7_","",names(geno7)))
-x <- data.frame(names(geno7),as.numeric(gsub("S7_","",names(geno7))))
-names(x) <- c("SNP","ps")
-x$chr <- 1
-
-
-
-pheno_v2 <- makeGRangesFromDataFrame(x,
-                                     keep.extra.columns=TRUE,
-                                     ignore.strand=TRUE,
-                                     seqinfo = seqinfo(AGPv2),  # Sanity check
-                                     seqnames.field="chr",
-                                     start.field="ps",
-                                     end.field="ps")
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
 pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
@@ -327,18 +238,98 @@ pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
 pheno_v5 <- data.frame(pheno_v5)
 pheno_v5$newSNP <- paste0("S7_",pheno_v5$start)
 
-#geno7 <- geno[["geno7"]]
 
-geno7 <- geno7[pheno_v5$SNP]
-names(geno7) <- pheno_v5$newSNP
-geno7[1:4,1:4]
-write.table(geno7,"geno7.txt", quote = F, row.names = F)
+geno7 <- as.data.frame(geno[["geno7"]])
+geno7 <- geno7[geno7$`rs#` %in% pheno_v5$`rs.`, ]
+geno7$`rs#` <- pheno_v5$newSNP
+geno7$pos <- pheno_v5$start
+
+write.table(geno7,"geno7.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno8 <- as.data.frame(geno[["geno8"]])
+geno8 <- as.data.frame(geno8[,c(1,3,4)])
 
 
+pheno_v2 <- makeGRangesFromDataFrame(geno8,
+                                     keep.extra.columns=TRUE,
+                                     ignore.strand=TRUE,
+                                     seqinfo = seqinfo(AGPv2),  # Sanity check
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
 
 
+pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
+pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
+pheno_v5 <- data.frame(pheno_v5)
+pheno_v5$newSNP <- paste0("S8_",pheno_v5$start)
 
 
+geno8 <- as.data.frame(geno[["geno8"]])
+geno8 <- geno8[geno8$`rs#` %in% pheno_v5$`rs.`, ]
+geno8$`rs#` <- pheno_v5$newSNP
+geno8$pos <- pheno_v5$start
+
+write.table(geno8,"geno8.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+geno9 <- as.data.frame(geno[["geno9"]])
+geno9 <- as.data.frame(geno9[,c(1,3,4)])
+
+
+pheno_v2 <- makeGRangesFromDataFrame(geno9,
+                                     keep.extra.columns=TRUE,
+                                     ignore.strand=TRUE,
+                                     seqinfo = seqinfo(AGPv2),  # Sanity check
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
+
+
+pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
+pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
+pheno_v5 <- data.frame(pheno_v5)
+pheno_v5$newSNP <- paste0("S9_",pheno_v5$start)
+
+
+geno9 <- as.data.frame(geno[["geno9"]])
+geno9 <- geno9[geno9$`rs#` %in% pheno_v5$`rs.`, ]
+geno9$`rs#` <- pheno_v5$newSNP
+geno9$pos <- pheno_v5$start
+
+write.table(geno9,"geno9.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
+
+geno10 <- as.data.frame(geno[["geno10"]])
+geno10 <- as.data.frame(geno10[,c(1,3,4)])
+
+
+pheno_v2 <- makeGRangesFromDataFrame(geno10,
+                                     keep.extra.columns=TRUE,
+                                     ignore.strand=TRUE,
+                                     seqinfo = seqinfo(AGPv2),  # Sanity check
+                                     seqnames.field="chrom",
+                                     start.field="pos",
+                                     end.field="pos")
+
+
+pheno_v4 <- liftOver(pheno_v2,ch) %>% unlist()
+pheno_v5 <-  liftOver(pheno_v4,ch2) %>% unlist()
+pheno_v5 <- data.frame(pheno_v5)
+pheno_v5$newSNP <- paste0("S10_",pheno_v5$start)
+
+
+geno10 <- as.data.frame(geno[["geno10"]])
+geno10 <- geno10[geno10$`rs#` %in% pheno_v5$`rs.`, ]
+geno10$`rs#` <- pheno_v5$newSNP
+geno10$pos <- pheno_v5$start
+
+write.table(geno10,"geno10.hmp.txt", quote = F, row.names = F, sep = "\t")
+
+###############################################################################
 
 
 
