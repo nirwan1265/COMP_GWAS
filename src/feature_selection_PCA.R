@@ -1,7 +1,18 @@
+library(pls)
+library(caret)
 library(pcaL1)
 library(vroom)
 library(glmnet)
+library(modelStudio)
+library(DALEX)
+library(tidyverse)
+library(tidymodels)
+library(xgboost)
+
+
+
 setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Phenotype")
+system("ls")
 pheno <- read.csv("Maize_allphospho.csv")
 
 
@@ -33,8 +44,6 @@ pheno <- read.csv("Maize_allphospho.csv")
 # First, install and load the pls package
 #install.packages("pls")
 #install.packages("pls", dependencies = TRUE, repos = "http://cran.us.r-project.org")
-library(pls)
-library(caret)
 
 
 # Next, load your phenotype data into R. In this example, the data is stored in a data frame called "pheno_data"
@@ -73,3 +82,30 @@ imp_sorted$pheno <- sapply(strsplit(imp_sorted$pheno, ")"), "[",2)
 
 
 ##############
+#XGBOOST
+##############
+data_tbl <- as_tibble(cbind(as.data.frame(pca[,2]), pheno[,2:29]))
+names(data_tbl)[1] <- "pca"
+
+
+#Model
+fit_xgboost <- boost_tree(learn_rate = 0.3) %>%
+  set_mode("regression") %>%
+  set_engine("xgboost") %>%
+  fit(pca ~. , data = data_tbl)
+boost_
+fit_xgboost
+
+
+# Explainer
+explainer <- DALEX::explain(
+  model = fit_xgboost,
+  data = data_tbl,
+  y = data_tbl$pca,
+  label = "XGBoost"
+)
+
+
+# MODEL STUDIO
+
+modelStudio::modelStudio(explainer)
