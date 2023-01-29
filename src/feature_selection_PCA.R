@@ -60,11 +60,16 @@ dim(W)
 
 #Combining Eigen Vector with weight 
 composite_pca <- pca
-composite_pca <- as.data.frame(rowSums(as.matrix(pca) %*% W))
+composite_pca <- composite_pca[,-1]
+composite_pca <- as.matrix(composite_pca)
+#composite_pca <- as.numeric(composite_pca)
+composite_pca <- as.matrix(composite_pca)
+class(composite_pca)
+typeof(composite_pca)
+dim(composite_pca)
 
+composite_pca <- as.data.frame(rowSums(as.matrix(composite_pca) %*% W))
 
-dim(pca)
-dim(pheno)
 
 # Fit a PLS model using the PCs as the independent variables and the phenotypes as the dependent variables
 pls_model <- plsr(as.matrix(composite_pca)~as.matrix(pheno[,2:29]), ncomp = 1)
@@ -93,7 +98,7 @@ fit_xgboost <- boost_tree(learn_rate = 0.3) %>%
   set_mode("regression") %>%
   set_engine("xgboost") %>%
   fit(pca ~. , data = data_tbl)
-boost_
+
 fit_xgboost
 
 
