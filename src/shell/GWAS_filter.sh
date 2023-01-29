@@ -1,6 +1,6 @@
 #!/bin/sh
 for i in *.txt
-do awk -F"\t" '{print $2,$1,$3,$13}' $i > "${i%.*}.filtered.${i##*.}"
+do awk -F"\t" '{print $2,$1,$3,$11}' $i > "${i%.*}.filtered.${i##*.}"
 done
 
 
