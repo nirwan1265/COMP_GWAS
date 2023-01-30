@@ -190,7 +190,7 @@ gbj_test <- function(path, phenoname, chr, organism){
 
 # #Required arguments
 
-path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
+path = "/Users/nirwan/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 #Sorghum
 #phenoname <- c("NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","solHi_","solLo_","solMo_","solmod_","solVL_","stp1", "stp2", "stp3","stp10_","tot","TP1","TP2")
 #Maize
@@ -201,7 +201,7 @@ organism <- "Zea"
 chr <- 10
 
 #Register nodes
-cluster <- makeCluster(parallel::detectCores() - 1)
+cluster <- makeCluster(parallel::detectCores())
 registerDoParallel(cluster)
 
 #Getting the results with time
@@ -211,6 +211,7 @@ for (m in phenoname){
   assign(paste0(m,"_omni_maize"), gbj_test(path,phenoname,chr,organism))
 }
 toc()
+
 
 
 # Save as CSV
@@ -225,7 +226,3 @@ for(i in phenoname){
 
 # Stop the parallel cluster
 stopCluster(cluster)
-system("ls")
-
-
-gbj_test()

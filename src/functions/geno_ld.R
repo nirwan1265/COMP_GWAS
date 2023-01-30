@@ -14,7 +14,7 @@ geno_ld <- function(organism,chr){
   }
   else {
     for(i in 1:chr){
-      assign(paste0("geno",i), vroom(paste0("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/MAF/c",i,"_MAF.txt")))
+      assign(paste0("geno",i), vroom(paste0("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/MAF/c",i,"_MAFz_v5.sorghum.txt")))
       geno <- c(geno, list(get(paste0("geno",i))))
       names(geno)[i] <- paste0("geno",i)
     }
