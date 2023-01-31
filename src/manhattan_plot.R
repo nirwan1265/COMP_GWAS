@@ -2,7 +2,7 @@
 library("CMplot")
 
 #Path
-setwd("~/Desktop")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Phenotype")
 
 # Data
 maize <- vroom("PNZ1_maize.txt")

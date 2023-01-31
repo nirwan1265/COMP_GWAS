@@ -95,21 +95,21 @@ gbj_test <- function(path, phenoname, chr, organism){
     ############################################################################
     
     # Parallelizing GBJ analysis
-    gbj_analysis = list()
-    gbj_analysis <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
-      list(GBJ::GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))),
-                    cor_mat=corr_mat[[i]])$GBJ_pvalue)
-    }
-    results[[j]] <- gbj_analysis
-    names(results)[[j]] <- paste0("chr",j)
+    # gbj_analysis = list()
+    # gbj_analysis <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
+    #   list(GBJ::GBJ(test_stats = as.vector(unlist(na.omit(zstat_df[i]))),
+    #                 cor_mat=corr_mat[[i]])$GBJ_pvalue)
+    # }
+    # results[[j]] <- gbj_analysis
+    # names(results)[[j]] <- paste0("chr",j)
     # 
     ############################################################################
     
     #Parallelizing OMNI analysis
-    # omni_analysis = list()
-    # omni_analysis <- foreach(i = 1:ncol(marker_df), .combine = c) %dopar% {
-    #   list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 100)$OMNI_pvalue)
-    # }
+    omni_analysis = list()
+    omni_analysis <- foreach(i = 1, .combine = c) %dopar% {
+      list(GBJ::OMNI_ss(test_stats = as.vector(unlist(na.omit(zstat_df[i]))), cor_mat=corr_mat[[i]], num_boots = 10)$OMNI_pvalue)
+    }
     # results[[j]] <- omni_analysis
     # names(results)[[j]] <- paste0("chr",j)
 
@@ -196,8 +196,8 @@ path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Githu
 #Maize
 phenoname <- c("apa","lab","NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo","sol_Mo","sol","sol_VL","stp10", "stp20", "stp30","stp100","tot","TP1","TP2")
 phenoname <- c("apa","lab","NPlim")
-phenoname <- "apa"
-organism <- "Sorghum"
+phenoname <- "lab"
+organism <- "Zea"
 chr <- 1
 
 #Register nodes
