@@ -35,8 +35,8 @@ sorghum_MAGMA$phenotype_count <- sapply(strsplit(sorghum_MAGMA$phenotype,","), l
 sorghum_MAGMA <- sorghum_MAGMA %>% 
   arrange(desc(phenotype_count))
 
-
-
+write.csv(sorghum_omni,"combined_sorghum_omni.csv",row.names = F)
+write.csv(sorghum_MAGMA,"combined_sorghum_magma.csv",row.names = F)
 ### MAIZE ####
 # FINDING COUNT AND COMMON GENES BETWEEN OMNI AND MAGMA
 # maize

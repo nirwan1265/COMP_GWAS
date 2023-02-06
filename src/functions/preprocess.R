@@ -33,6 +33,7 @@ preprocess <- function(path, phenoname, n, organism){
       assign(paste0("gr.q", i) , GenomicRanges::GRanges(seqnames = paste0("chr",sprintf("%02d",i)), ranges = IRanges(start = d[,"Start_Position"], width = 1, zstat = d[,"Zvalue"], Marker = d[,"Marker"],pvalue = d[,"pvalue"])))
       a = a + 1
       assign(paste0("common",i), as.data.frame(IRanges::findOverlapPairs(get(paste0("gr.db",i)), get(paste0("gr.q",i)))))
+      
       e = get(paste0("common",i))
       e = e[which(e$first.X.Region == "gene"), ]
       e = e[,c(7,16,17,18)]
@@ -145,9 +146,9 @@ preprocess <- function(path, phenoname, n, organism){
 # Usage
 # Not run
 path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
-phenoname <- "NPlim"
-organism <- "Zea"
-chr <- 1
+phenoname <- "POL2"
+organism <- "Sorghum"
+chr <- 5
 preprocess_data <- preprocess(path, phenoname, chr,  organism)
 
 

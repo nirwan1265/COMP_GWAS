@@ -11,5 +11,5 @@ pca_ld <- function(organism){
   return(pca)
 }
 
-#pca <- pca_ld("Zea")
+pca <- pca_ld("Sorghum")
 
