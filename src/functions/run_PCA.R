@@ -2,12 +2,22 @@
 #Need a vcf file format of the hapmap which is converted to GDS format
 #TASSEL or PLINK is used for converting hapmap to VCF file format
 #Need a directory to  create the gds file. If working on the server, we might need to define this before starting
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf")
+#Sorghum
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered")
 
 ##Reading the vcf files
 for(i in sprintf("%02d", 1)){
-  assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf/allchrom_maize_MAF0.01_pheno.vcf"))
+  assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered/allchrom.recode.vcf"))
 }
+
+
+#Maize
+#setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf")
+
+##Reading the vcf files
+# for(i in sprintf("%02d", 1)){
+#   assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf/allchrom_maize_MAF0.01_pheno.vcf"))
+# }
 
 ##Converting vcf to gds
 #A bit time consuming
@@ -36,6 +46,7 @@ for(i in paste0("gdsfile",sprintf("%02d", 1))){
   assign(i,d)
   j = j + 1
 }
+
 
 ## Get all selected snp id
 j <- 1
@@ -75,9 +86,64 @@ for(i in paste0("pca",sprintf("%02d",1))){
                                                      EV8 = d$eigenvect[,8],
                                                      EV9 = d$eigenvect[,9],
                                                      EV10 = d$eigenvect[,10],
+                                                     EV11 = d$eigenvect[,11],
+                                                     EV12 = d$eigenvect[,12],
+                                                     EV13 = d$eigenvect[,13],
+                                                     EV14 = d$eigenvect[,14],
+                                                     EV15 = d$eigenvect[,15],
+                                                     EV16 = d$eigenvect[,16],
+                                                     EV17 = d$eigenvect[,17],
+                                                     EV18 = d$eigenvect[,18],
+                                                     EV19 = d$eigenvect[,19],
+                                                     EV20 = d$eigenvect[,20],
+                                                     EV21 = d$eigenvect[,21],
+                                                     EV22 = d$eigenvect[,22],
+                                                     EV23 = d$eigenvect[,23],
+                                                     EV24 = d$eigenvect[,24],
+                                                     EV25 = d$eigenvect[,25],
                                                      stringsAsFactors = FALSE))
   assign(i,d)
   j = j + 1
 }
+
+system("pwd")
+saveRDS(pca01,"pca_sorghum.RDS")
+
+# Variance Proportion (%)
+pc.percent <- pca01$varprop*100
+round(pc.percent)
+plot(tab01$EV1,tab01$EV2)
+
+#Population information 
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Phenotype")
+pop_code <- read.csv("covariate_sorghum_region.csv")
+head(pop_code)
+pop_code <- as.data.frame(cbind(tab01$sample.id, pop_code$region))
+names(pop_code) <- c("ID","Region")
+
+plot(tab01$EV1,tab01$EV2, col = as.integer(pop_code$Region), xlab="eigenvector 2", ylab="eigenvector 1")
+legend("bottomright", legend=levels(as.factor(pop_code$Region)), pch="o", col=1:nlevels(as.factor(pop_code$Region)))
+
+
+lbls <- paste("PC", 1:4, "\n", format(pc.percent[1:4], digits=2), "%", sep="")
+pairs(pca01$eigenvect[,1:4], col=pop_code$Region, labels=lbls)
+
+
+########################
+snp_selected <- pca01$snp.id
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered")
+maf_map <- vroom("allchrom_africa_filtered.MAF.txt")
+maf_map[1:4,1:4]
+maf_map2 <- maf_map[,snp_selected]
+library(pcaL1)
+mypcal1 <- pcal1(as.matrix(maf_map2), projDim=2, center=FALSE, projections="l2pca", initialize = "l2pca")
+
+myawl1pca <- awl1pca(as.matrix(maf_map2))
+
+
+
+
+
+########################################################################################
 
 

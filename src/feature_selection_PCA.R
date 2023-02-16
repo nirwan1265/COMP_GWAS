@@ -11,8 +11,9 @@ library(xgboost)
 
 
 
+
+# Phenotype data
 setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Phenotype")
-system("ls")
 pheno <- read.csv("Maize_allphospho.csv")
 
 
