@@ -45,7 +45,7 @@ genome(AGPv2) <- "AGPv2"
 # source:
 # http://ftp.gramene.org/CURRENT_RELEASE/assembly_chain/zea_mays/
 chain_file <- "AGPv2_to_B73_RefGen_v4.chain"
-
+str(trial)
 
 ch <-import.chain(chain_file)
 PCAdapt_v2 <- makeGRangesFromDataFrame(PCAdapt,

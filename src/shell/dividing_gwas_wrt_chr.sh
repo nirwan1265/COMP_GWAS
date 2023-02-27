@@ -6,8 +6,6 @@ head -n 1 tot.txt > header.txt
 
 for i in *.txt
 do
-head -n 1 $i > "${i%.*}"01.txt
-grep "^S1" $i >> "${i%.*}"01.txt
 head -n 1 $i > "${i%.*}"02.txt
 grep "^S2" $i >> "${i%.*}"02.txt
 head -n 1 $i > "${i%.*}"03.txt
@@ -26,4 +24,6 @@ head -n 1 $i > "${i%.*}"09.txt
 grep "^S9" $i >> "${i%.*}"09.txt
 head -n 1 $i > "${i%.*}"10.txt
 grep "^S10" $i >> "${i%.*}"10.txt
+head -n 1 $i > "${i%.*}"01.txt
+grep "^S1" $i >> "${i%.*}"01.txt
 done

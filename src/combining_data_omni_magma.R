@@ -44,7 +44,7 @@ if("total_omni" %in% ls()) {
 
 
 # MAGMA
-magma_path <- "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data/Results/sorghum/MAGMA"
+magma_path <- ("/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Research/Results/GWAS.results/sorghum_Output/v3/MAGMA_sorghum_2kb")
 magma_files <- list.files(magma_path, pattern = ".genes.out")
 
 for(file in magma_files){
@@ -71,7 +71,7 @@ names(total_magma)[6] <- "phenotype"
 total_magma[,1:ncol(total_magma)] <- apply(total_magma,2,function(x) gsub("_magma_multi_snpwise.genes.out","",x))
 total_magma <- total_magma %>% arrange(P_MULTI)
 
-write.csv(total_magma,"MAGMA_sorghum.csv",row.names = FALSE)
+write.csv(total_magma,"Top_MAGMA_hits_sorghum.csv",row.names = FALSE)
 
 
 ################################################################################

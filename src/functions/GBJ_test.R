@@ -193,6 +193,7 @@ gbj_test <- function(path, phenoname, chr, organism){
 path = "/Users/nirwantandukar/Library/Mobile Documents/com~apple~CloudDocs/Github/COMP_GWAS/data"
 #Sorghum
 phenoname <- c("apa","ext_P20","lab","NPlim","occ","org","PBR1","PBR2","PHO1","PMEH1","PMEH2","PNZ1","PNZ2","sec","sol_Hi","sol_Lo","sol_Mo","sol_VL","sol","stp10","stp20","stp30","stp100","tot","TP1","TP2")
+
 #phenoname <- c("POL1","POL2","PHO2")
 #Maize
 # phenoname <- c("apa","lab","NPlim","occ","org","PBR1","PBR2","PHO1","PHO2","PMEH1","PMEH2","PNZ1","PNZ2","POL1","POL2","sec","sol_Hi","sol_Lo","sol_Mo","sol","sol_VL","stp10", "stp20", "stp30","stp100","tot","TP1","TP2")
@@ -209,7 +210,7 @@ registerDoParallel(cluster)
 tic()
 for (m in phenoname){
   print(m)
-  assign(paste0(m,"_omni_sorghum"), gbj_test(path,phenoname,chr,organism))
+  assign(paste0(m,"2kbext_omni_sorghum"), gbj_test(path,phenoname,chr,organism))
 }
 toc()
 
@@ -217,12 +218,14 @@ system("ls")
 
 # Save as CSV
 for(i in phenoname){
-  write.csv(get(paste0(i,"_omni_sorghum")),(paste0(i,"_omni_sorghum.csv")), row.names = FALSE)
+  write.csv(get(paste0(i,"2kbext_omni_sorghum")),(paste0(i,"_omni_sorghum_2kbext.csv")), row.names = FALSE)
 }
+system("pwd")
+phenoname <- c("apa","ext_P20","lab","NPlim","occ","org","PBR1","PBR2","PHO1","PMEH1","PMEH2","PNZ1","PNZ2","sec")
 
 #Save as RDS
 for(i in phenoname){
-  saveRDS(get(paste0(i,"_omni_sorghum")),(paste0(i,"_omni_sorghum.RDS")))
+  saveRDS(get(paste0(i,"2kbext_omni_sorghum")),(paste0(i,"_omni_sorghum_2kbext.RDS")))
 }
 
 # Stop the parallel cluster

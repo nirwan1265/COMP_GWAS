@@ -23,7 +23,9 @@ sorghum_omni <- sorghum_omni %>%
 #MAGMA
 library(dplyr)
 system("ls")
-sorghum_MAGMA <- read.csv("MAGMA_sorghum.csv")
+# From combining_data_omni_magma
+sorghum_MAGMA <- total_magma
+#sorghum_MAGMA <- read.csv("MAGMA_sorghum.csv")
 sorghum_MAGMA <- sorghum_MAGMA[which(sorghum_MAGMA$P_MULTI < 0.05), ]
 sorghum_MAGMA <- sorghum_MAGMA[,c(-4,-5)]
 
@@ -36,7 +38,7 @@ sorghum_MAGMA <- sorghum_MAGMA %>%
   arrange(desc(phenotype_count))
 
 write.csv(sorghum_omni,"combined_sorghum_omni.csv",row.names = F)
-write.csv(sorghum_MAGMA,"combined_sorghum_magma.csv",row.names = F)
+write.csv(sorghum_MAGMA,"Combined_MAGMA_res_sorghum.csv",row.names = F)
 ### MAIZE ####
 # FINDING COUNT AND COMMON GENES BETWEEN OMNI AND MAGMA
 # maize
