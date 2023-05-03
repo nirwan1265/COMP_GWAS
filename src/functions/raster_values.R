@@ -4,7 +4,7 @@ library(raster)
 #install.packages("rgdal")
 library(rgdal)
 
-# 
+#raster
 
 # Directory
 dir_data <- "~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/OlsenP_2023/"
