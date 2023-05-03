@@ -2,7 +2,7 @@
 # chr 1 has 1 and 10 so remove 10
 # in maize chromosome 10 has a random chr 4's SNPs in the first line so remove that too
 
-head -n 1 tot.txt > header.txt
+head -n 1 PNZ1.txt > header.txt
 
 for i in *.txt
 do

@@ -2,7 +2,7 @@
 
 for f in allchrom.bed allchrom.bim allchrom.fam; do
 cp $f apa.$(basename $f .bed)
-cp $f ext_P20.$(basename $f .bed)
+#cp $f ext_P20.$(basename $f .bed)
 cp $f lab.$(basename $f .bed)
 cp $f NPlim.$(basename $f .bed)
 cp $f occ.$(basename $f .bed)
@@ -32,7 +32,7 @@ cp $f TP1.$(basename $f .bed)
 cp $f TP2.$(basename $f .bed)
 
 cp $f apa.$(basename $f .bim)
-cp $f ext_P20.$(basename $f .bim)
+#cp $f ext_P20.$(basename $f .bim)
 cp $f lab.$(basename $f .bim)
 cp $f NPlim.$(basename $f .bim)
 cp $f occ.$(basename $f .bim)
@@ -62,7 +62,7 @@ cp $f TP1.$(basename $f .bim)
 cp $f TP2.$(basename $f .bim)
 
 cp $f apa.$(basename $f .fam)
-cp $f ext_P20.$(basename $f .fam)
+#cp $f ext_P20.$(basename $f .fam)
 cp $f lab.$(basename $f .fam)
 cp $f NPlim.$(basename $f .fam)
 cp $f occ.$(basename $f .fam)

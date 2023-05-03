@@ -3,21 +3,21 @@
 #TASSEL or PLINK is used for converting hapmap to VCF file format
 #Need a directory to  create the gds file. If working on the server, we might need to define this before starting
 #Sorghum
-setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered")
+#setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered/v3/vcf")
 
 ##Reading the vcf files
-for(i in sprintf("%02d", 1)){
-  assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered/allchrom.recode.vcf"))
-}
+#for(i in sprintf("%02d", 1)){
+#  assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Lasky.hapmap/raw/africa.filtered/v3/vcf/allchrom.vcf"))
+#}
 
 
 #Maize
-#setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf")
+setwd("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/hapmap")
 
 ##Reading the vcf files
-# for(i in sprintf("%02d", 1)){
-#   assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/vcf/allchrom_maize_MAF0.01_pheno.vcf"))
-# }
+for(i in sprintf("%02d", 1)){
+  assign(paste0("vcf.fn",i),paste0("~/Library/Mobile Documents/com~apple~CloudDocs/Research/Data/Maize/geno/RomeroNavarro2017/hapmap/allchrom_maize_MAF0.01_pheno.vcf"))
+}
 
 ##Converting vcf to gds
 #A bit time consuming
@@ -85,27 +85,33 @@ for(i in paste0("pca",sprintf("%02d",1))){
                                                      EV7 = d$eigenvect[,7],
                                                      EV8 = d$eigenvect[,8],
                                                      EV9 = d$eigenvect[,9],
-                                                     EV10 = d$eigenvect[,10],
-                                                     EV11 = d$eigenvect[,11],
-                                                     EV12 = d$eigenvect[,12],
-                                                     EV13 = d$eigenvect[,13],
-                                                     EV14 = d$eigenvect[,14],
-                                                     EV15 = d$eigenvect[,15],
-                                                     EV16 = d$eigenvect[,16],
-                                                     EV17 = d$eigenvect[,17],
-                                                     EV18 = d$eigenvect[,18],
-                                                     EV19 = d$eigenvect[,19],
-                                                     EV20 = d$eigenvect[,20],
-                                                     EV21 = d$eigenvect[,21],
-                                                     EV22 = d$eigenvect[,22],
-                                                     EV23 = d$eigenvect[,23],
-                                                     EV24 = d$eigenvect[,24],
-                                                     EV25 = d$eigenvect[,25],
+                                                     EV9 = d$eigenvect[,10],
+                                                     EV10 = d$eigenvect[,11],
+                                                     EV10 = d$eigenvect[,12],
+                                                     EV10 = d$eigenvect[,13],
+                                                     EV10 = d$eigenvect[,14],
+                                                     EV10 = d$eigenvect[,15],
+                                                     EV10 = d$eigenvect[,16],
+                                                     EV10 = d$eigenvect[,17],
+                                                     EV10 = d$eigenvect[,18],
+                                                     EV10 = d$eigenvect[,19],
+                                                     EV10 = d$eigenvect[,20],
+                                                     EV10 = d$eigenvect[,21],
+                                                     EV10 = d$eigenvect[,22],
+                                                     EV10 = d$eigenvect[,23],
+                                                     EV10 = d$eigenvect[,24],
+                                                     EV10 = d$eigenvect[,25],
+                                                     EV10 = d$eigenvect[,26],
+                                                     EV10 = d$eigenvect[,27],
+                                                     EV10 = d$eigenvect[,28],
+                                                     EV10 = d$eigenvect[,29],
+                                                     EV10 = d$eigenvect[,30],
                                                      stringsAsFactors = FALSE))
   assign(i,d)
   j = j + 1
 }
 
+write.table(tab01, "Maize_PCA_30.txt", row.names = F, quote = F, sep = "\t")
 system("pwd")
 saveRDS(pca01,"pca_sorghum.RDS")
 
